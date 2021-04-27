@@ -1,0 +1,96 @@
+{extend name="public/base"}
+
+{block name="left"}
+<div id="wrapper">
+<div id="xh_content">
+<style>
+div .path{background: none;}
+div .path a{color:#000;}
+</style>
+    <h2>{notempty name="data"}搜索 "{$data|urldecode}" 的结果{else/}搜索为空！下面是推荐文章{/notempty}</h2>
+        <div class="clear"></div>
+        <hr>
+    <div class="xh_area_h_3" style="margin-top: 40px;">
+        {volist name="serRes" id="vo" key="k"}
+        {if condition="$vo.pic neq ''"}
+        <div class="xh_post_h_3 ofh post-list-show">
+            {if $k % 2 == 0}
+            <div class="xh" style="background-image:-webkit-linear-gradient(top,#fff,#f9f9f9);border:1px solid #ccc;">
+                <div class="r ofh">
+                            <span class="xh_post_h_3_title ofh" style="height:60px;">
+                                <a href="/article/{$vo.cid}/{$vo.id}" title="{$vo.title}">
+                                    <span style="font-size: 20px;font-weight: bold">{if $vo.rec == "1"}<span style="color: red;" title="推荐文章">*</span>{/if}{$vo.title}</span>
+                                </a>
+                            </span>
+                    <span class="time">{$vo.create_time}</span>
+                    <div class="xh_post_h_3_entry ofh sub_content" style="color:#555;height:80px; overflow:hidden;">
+                        {$vo.content|trim}
+                    </div>
+                    <div class="b">
+                        <span title="{$vo.click}人赞" class="xh_love"><span class="textcontainer"><span>🙆{$vo.click}</span></span> </span> <span title="{$vo.look}人浏览" class="xh_views">👀{$vo.look}</span>
+                    </div>
+                </div>
+                <div class="article-item">
+                    <a href="/article/{$vo.cid}/{$vo.id}" title="{$vo.title}">
+                        <img class="scale" src="{$vo.pic}" alt="{$vo.title}" height="100%" width="100%">
+                    </a>
+                </div>
+                <span class="cat">
+                                <a href="/artlist/{$vo.cid}" title="查看 {$vo.catename} 中的全部文章" rel="category tag">{$vo.catename}</a>
+                            </span>
+            </div>
+            {else/}
+            <div class="xh" style="background-image:-webkit-linear-gradient(top,#fff,#f9f9f9);border:1px solid #ccc;height: 240px;">
+                <div class="r ofh" style="left:10px;">
+                            <span class="xh_post_h_3_title ofh" style="height:60px;top:30px">
+                                <a href="/article/{$vo.cid}/{$vo.id}" title="{$vo.title}">
+                                    <span style="font-size: 20px;font-weight: bold">{if $vo.rec == "1"}<span style="color: red;" title="推荐文章">*</span>{/if}{$vo.title}</span>
+                                </a>
+                            </span>
+                    <span class="time">{$vo.create_time}</span>
+                    <div class="xh_post_h_3_entry ofh sub_content" style="color:#555;height:80px; overflow:hidden;">
+                        {$vo.content|trim}
+                    </div>
+                    <div class="b">
+                        <span title="{$vo.click}人赞" class="xh_love"><span class="textcontainer"><span>🙆{$vo.click}</span></span> </span> <span title="{$vo.look}人浏览" class="xh_views">👀{$vo.look}</span>
+                    </div>
+                </div>
+                <div class="article-item" style="float: right">
+                    <a href="/article/{$vo.cid}/{$vo.id}" title="{$vo.title}">
+                        <img class="scale" src="{$vo.pic}" alt="{$vo.title}" height="100%" width="100%">
+                    </a>
+                </div>
+                <span class="cat">
+                                <a href="/artlist/{$vo.cid}" title="查看 {$vo.catename} 中的全部文章" rel="category tag">{$vo.catename}</a>
+                            </span>
+            </div>
+            {/if}
+        </div>
+        {else/}
+        <div class="xh_post_h_3 ofh post-list-show">
+            <div class="r ofh" style="width:95%;background-image:-webkit-linear-gradient(top,#fff,#f9f9f9);border:1px solid #ccc">
+                <h2 class="xh_post_h_3_title ofh" style="height:60px;">
+                    <a href="/article/{$vo.cid}/{$vo.id}" title="{$vo.title}">{if $vo.rec == "1"}<span style="color: red;" title="推荐文章">*</span>{/if}{$vo.title}</a>
+                </h2>
+                <span class="time">{$vo.create_time}</span>
+                <div class="xh_post_h_3_entry ofh sub_content" style="color:#555;height:80px; overflow:hidden;">
+                    {$vo.content|urldecode}
+                </div>
+                <div class="b" style="width:95%">
+                    <span title="{$vo.click}人赞" class="xh_love"><span class="textcontainer"><span>🙆{$vo.click}</span></span> </span> <span title="{$vo.look}人浏览" class="xh_views">👀{$vo.look}</span>
+                </div>
+            </div>
+            <span class="cat">
+                            <a href="/artlist/{$vo.cid}" title="查看 {$vo.catename} 中的全部文章" rel="category tag">{$vo.catename}</a>
+                        </span>
+        </div>
+        {/if}
+
+        {/volist}
+    </div>
+        </div>
+</div>
+{/block}
+{block name="right"}
+{include file="public/right"}
+{/block}

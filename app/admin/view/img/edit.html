@@ -1,0 +1,92 @@
+{include file="public/css"}
+<div class="main-container container-fluid">
+    <div class="page-container">
+        <div class="page-content" style="margin-left: 0;">
+            <div class="page-body">
+
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12 col-xs-12">
+                        <div class="widget">
+                            <div class="widget-header bordered-bottom bordered-blue">
+                                <span class="widget-caption">修改轮播图</span>
+                            </div>
+                            <div class="widget-body">
+                                <div id="horizontal-form">
+                                    <form class="form-horizontal" id="edit_form" action-url="{:url('img/editPost')}" enctype="multipart/form-data">
+                                        <input type="hidden" name="id" value="{$res.id}">
+                                        <div class="form-group">
+                                            <label for="" class="col-sm-2 control-label no-padding-right">描述</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" value="{$res.desc}" name="desc" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="" class="col-sm-2 control-label no-padding-right">封面图</label>
+                                            <div class="col-sm-6">
+                                                <input type="file" id="file"/><br>
+                                                <input type="hidden" name="pic" value="{$res.pic}">
+                                                <img class="res_pic" src="{$res.pic}" height="120" style="border-radius: 5px">
+                                            </div>
+                                        </div>
+
+                                         <div class="form-group">
+                                            <label for="" class="col-sm-2 control-label no-padding-right">地址</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" name="url" value="{$res.url}"  class="form-control">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="" class="col-sm-2 control-label no-padding-right">广告位</label>
+                                            <div class="col-sm-6">
+                                                <div class="radio" style="float:left; margin-right:10px;">
+                                                    <label>
+                                                        <input name="rec_index" class="inverted" {if condition="$res['rec_index'] eq 1"}checked="checked"{/if} value="1" type="checkbox">
+                                                        <span class="text">轮播图位置</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-sm-offset-2 col-sm-10">
+                                                <button type="button" class="btn btn-default" onclick="SaveInfoEdit()">保存信息</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{include file="public/foot"}
+<script>
+    function upload(){
+        var formData = new FormData($("#uploadForm")[0]);
+        $.ajax({
+            url: "{:url('img/editPost')}",
+            type: 'POST',
+            data: formData,
+            async: false,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(res) {
+                if(res.status == 1){
+                    layer.msg(res.msg,{icon: 1});
+                    setTimeout(function() {
+                        window.parent.location.reload();
+                        layer.close(layer.index);
+                    }, 600);
+                }else{
+                    layer.msg(res.msg,{icon: 5});
+                }
+            }
+        });
+    }
+</script>

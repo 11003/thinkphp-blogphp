@@ -1,0 +1,174 @@
+{extend name="public/base" /}
+{block name="main"}
+<div class="page-body">
+    <div class="wrapper wrapper-content">
+        <!-- Panel Other -->
+        <div class="ibox float-e-margins">
+            <div class="ibox float-e-margins">
+                <div class="buttons-preview">
+                    {if authCheck('data/handler')}
+                    <a id="export" href="javascript:void(0);" class="btn btn-primary">立即备份</a>
+                    <a id="optimize" href="{:url('data/optimize')}" class="btn btn-sky">优化表</a>
+                    <a id="repair" href="{:url('data/repair')}" class="btn btn-azure">修复表</a>
+                    <a href="{:url('data/importlist')}" class="btn btn-blue" autocomplete="off">还原数据库</a>
+                    {/if}
+                </div>
+                <div class="ibox-content">
+                    <form id="export-form" method="post" action="{:url('data/export')}">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th class="text-center">
+                                    <label>
+                                        <input type="checkbox" class="inverted" >
+                                        <span class="text" style="cursor: pointer" id="fck"></span>
+                                    </label>
+                                </th>
+                                <th>表名</th>
+                                <th>数据量</th>
+                                <th>数据大小</th>
+                                <th>创建时间</th>
+                                <th>备份状态</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {foreach name='list' item='table'}
+                            <tr>
+                                <td class="text-center" >
+                                    <label>
+                                        <input type="checkbox" name="tables[]" value="{$table.name}" class="inverted sck">
+                                        <span class="text" style="cursor: pointer"></span>
+                                    </label>
+                                </td>
+                                <td>{$table.name}</td>
+                                <td>{$table.rows}</td>
+                                <td>{$table.data_length|format_bytes}</td>
+                                <td>{$table.create_time}</td>
+                                <td class="info">未备份</td>
+                                <td>{$table.operate}</td>
+                            </tr>
+                            {/foreach}
+                            </tbody>
+                        </table>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="page_script"}
+<script>
+  //备份表方法
+  $("#export").click(function(){
+    $(this).html("正在发送备份请求...");
+    $.post(
+      $("#export-form").attr("action"),
+      $("#export-form").serialize(),
+      function(data){
+
+        if(data.code==1){
+          $("#export").html( "开始备份，请不要关闭本页面！");
+          backup(data.data.tab);
+          window.onbeforeunload = function(){ return "正在备份数据库，请不要关闭！" }
+        }else{
+          layer.tips(data.msg, "#export", {
+            tips: [1, '#3595CC'],
+            time: 4000
+          });
+          $("#export").html("立即备份");
+        }
+
+      }, "json");
+    return false;
+  });
+  //递归备份表
+  function backup(tab,status){
+    status && showmsg(tab.id, "开始备份...(0%)");
+    $.get( $("#export-form").attr("action"), tab, function(data){
+      // console.log(data)
+      if(data.code==1){
+        showmsg(tab, data.msg);
+
+        if(!$.isPlainObject(data.data.tab)){
+          $("#export").html("备份完成");
+          layer.alert("备份完成！", {icon : 1});
+          window.onbeforeunload = function(){ return null }
+          return;
+        }
+
+        backup(data.data.tab, tab.id != data.data.tab.id);
+      } else {
+        $("#export").html("立即备份");
+      }
+    }, "json");
+
+  }
+  //修改备份状态
+  function showmsg(tab, msg){
+    $("table tbody tr").eq(tab.id).find(".info").html(msg)
+  }
+
+  //优化表
+  $("#optimize").click(function(){
+    $.post(this.href, $("#export-form").serialize(), function(data){
+
+      layer.tips(data.msg, "#optimize", {
+        tips: [1, '#3595CC'],
+        time: 4000
+      });
+
+    }, "json");
+    return false;
+  });
+
+  //修复表
+  $("#repair").on("click",function(e){
+
+    $.post(this.href, $("#export-form").serialize(), function(data){
+      layer.tips(data.msg, "#repair", {
+        tips: [1, '#3595CC'],
+        time: 4000
+      });
+    }, "json");
+    return false;
+  });
+
+
+  // 优化指定表
+  function optimizeData(table){
+    index = layer.open({
+      type: 1,
+      area:'400px',
+      title:'正在操作',
+      skin: 'layui-layer-demo', //加上边框
+      content: $('#wait')
+    });
+    $.getJSON("{:url('data/optimize')}", {'tables' : table}, function(res){
+      layer.close(index);
+      layer.alert('优化'+ table +'成功！', {icon: 1}, function(){
+        window.location.reload();
+      });
+    })
+  }
+
+  // 修复指定表
+  function repairData(table){
+    index = layer.open({
+      type: 1,
+      area:'400px',
+      title:'正在操作',
+      skin: 'layui-layer-demo', //加上边框
+      content: $('#wait')
+    });
+    $.getJSON("{:url('data/repair')}", {'tables' : table}, function(res){
+      layer.close(index);
+      layer.alert('修复'+ table +'成功！', {icon: 1}, function(){
+        window.location.reload();
+      });
+    })
+  }
+</script>
+{/block}

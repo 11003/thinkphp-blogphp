@@ -1,0 +1,156 @@
+﻿{include file="public/css"}
+
+<style>.login-container .loginbox {
+    height: 385px !important;
+}
+
+#captcha:hover {
+    cursor: pointer;
+}</style>
+<div class="login-container animated fadeInDown">
+    <div style="position: absolute;filter: blur(41.9833px);pointer-events: none;user-select: none;z-index: -1;left: 0;top: 44px;">
+        <div style="position: absolute; border-radius: 20%; height: 78.855px; width: 78.855px; left: 146.54px; top: 405.784px; background-color: rgb(102, 188, 249);"></div>
+        <div style="position: absolute; border-radius: 20%; height: 78.855px; width: 78.855px; left: 275.953px; top: 405.784px; background-color: rgb(204, 204, 191);"></div>
+        <div style="position: absolute; border-radius: 20%; height: 78.855px; width: 78.855px; left: 405.366px; top: 405.784px; background-color: rgb(239, 232, 231);"></div>
+        <div style="position: absolute; border-radius: 20%; height: 78.855px; width: 78.855px; left: 534.779px; top: 405.784px; background-color: rgb(208, 196, 179);"></div>
+        <div style="position: absolute; border-radius: 20%; height: 78.855px; width: 78.855px; left: 664.192px; top: 405.784px; background-color: rgb(201, 232, 252);"></div>
+        <div style="position: absolute; border-radius: 20%; height: 78.855px; width: 78.855px; left: 793.605px; top: 405.784px; background-color: rgb(251, 241, 203);"></div>
+        <div style="position: absolute; border-radius: 20%; height: 78.855px; width: 78.855px; left: 146.54px; top: 543.78px; background-color: rgb(246, 249, 245);"></div>
+        <div style="position: absolute; border-radius: 20%; height: 78.855px; width: 78.855px; left: 275.953px; top: 543.78px; background-color: rgb(255, 170, 30);"></div>
+        <div style="position: absolute; border-radius: 20%; height: 78.855px; width: 78.855px; left: 405.366px; top: 543.78px; background-color: rgb(125, 239, 120);"></div>
+        <div style="position: absolute; border-radius: 20%; height: 78.855px; width: 78.855px; left: 534.779px; top: 543.78px; background-color: rgb(77, 174, 248);"></div>
+        <div style="position: absolute; border-radius: 20%; height: 78.855px; width: 78.855px; left: 664.192px; top: 543.78px; background-color: rgb(255, 193, 55);"></div>
+        <div style="position: absolute; border-radius: 20%; height: 78.855px; width: 78.855px; left: 793.605px; top: 543.78px; background-color: rgb(121, 169, 129);"></div>
+    </div>
+    <form action="" method="post">
+        <div class="loginbox bg-white">
+            <div class="loginbox-title">SIGN IN</div>
+            <div class="loginbox-social">
+                <div class="social-title ">Icons for decoration</div>
+                <div class="social-buttons">
+                    <a href="" class="button-facebook">
+                        <i class="social-icon fa fa-facebook"></i>
+                    </a>
+                    <a href="" class="button-twitter">
+                        <i class="social-icon fa fa-twitter"></i>
+                    </a>
+                    <a href="" class="button-google">
+                        <i class="social-icon fa fa-google-plus"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="loginbox-or">
+                <div class="or-line"></div>
+                <div class="or">OR</div>
+            </div>
+            <div class="loginbox-textbox">
+                <input type="text" class="form-control" placeholder="username" required name="username" value="test"/>
+            </div>
+            <div class="loginbox-textbox">
+                <input type="password" class="form-control" placeholder="Password" required name="password" value="test"/>
+            </div>
+            <div class="loginbox-textbox" style="display: flex;">
+                <input type="text" name="vercode" class="form-control" required placeholder="图形验证码" autocomplete="off">
+                <img src="{:captcha_src()}" alt="captcha" onclick="changeCaptcha(this)" id="captcha"/>
+            </div>
+            <div class="loginbox-forgot">
+                <a href="#" onclick="forgotPass()">忘记密码?</a>
+            </div>
+        </div>
+        <input type="button" class="btn btn-primary btn-block" value="Login">
+    </form>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="__AD__/layer/layer.js"></script>
+<script>
+  function forgotPass () {
+    layer.prompt({ title: '验证身份（请输入常用邮箱）', formType: 0 }, function (pass, index) {
+      var name = $('input[name=username]').val()
+      if (name) {
+        var loading_index = layer.load(1, {
+          shade: [0.3, '#000'] //0.1透明度的白色背景
+        })
+
+        $.post('{:url("login/forgotPass")}', { qq_email: pass, name: name }, function (res) {
+          layer.close(loading_index)
+          if (res.status === 200) {
+            layer.close(index)
+            layer.msg(res.msg)
+          } else {
+            layer.msg(res.msg, { anim: 6 })
+          }
+        })
+      } else {
+        layer.msg('请填写用户名!', { anim: 6 })
+        $('input[name=username]').focus()
+        layer.close(index)
+      }
+    })
+  }
+
+  function changeCaptcha (obj) {
+    $(obj).attr('src', $(obj).attr('src') + '?t=' + Math.random())
+  }
+
+  var username_el = $('input[name=username]')
+  var passwords_el = $('input[name=password]')
+  var vercode_el = $('input[name=vercode]')
+  var button_el = $('input[type=button]')
+
+  document.onkeydown = function (event) {
+    var e = event || window.event || arguments.callee.caller.arguments[0]
+    if (e && e.keyCode == 13) { // enter 键
+      button_el.click()
+    }
+  }
+
+  $(function () {
+    button_el.on('click', function () {
+
+      var loading_index = layer.load(1, {
+        shade: [0.3, '#000'] //0.1透明度的白色背景
+      })
+
+      var username = username_el.val()
+      var passwords = passwords_el.val()
+      var vercode = vercode_el.val()
+
+      $.post('{:url(\'login/loginPost\')}', {
+        username: username,
+        password: passwords,
+        vercode: vercode
+      }, function (res) {
+        layer.close(loading_index)
+        switch (res.status) {
+          case 0:
+          case 6:
+            layer.msg(res.msg, { anim: 6 })
+            vercode_el.focus()
+            $('#captcha').click()
+            break
+          case 1:
+          case 4:
+            layer.msg(res.msg, { anim: 6 })
+            username_el.focus()
+            $('#captcha').click()
+            break
+          case 2:
+          case 5:
+            layer.msg(res.msg, { anim: 6 })
+            passwords_el.focus()
+            $('#captcha').click()
+            break
+          case 3:
+            layer.msg(res.msg, { anim: 6 })
+            break
+          default:
+            window.location.href = res.url
+        }
+      })
+    })
+  })
+
+</script>
+</body>
+<!--Body Ends-->
+</html>

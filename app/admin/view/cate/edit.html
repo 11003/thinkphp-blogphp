@@ -1,0 +1,106 @@
+{include file="public/css"}
+<div class="main-container container-fluid">
+    <div class="page-container">
+        <div class="page-content" style="margin-left: 0;">
+            <div class="page-body">
+
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12 col-xs-12">
+                        <div class="widget">
+                            <div class="widget-header bordered-bottom bordered-blue">
+                                <span class="widget-caption">修改栏目</span>
+                            </div>
+                            <div class="widget-body">
+                                <div id="horizontal-form">
+                                    <form class="form-horizontal" id="edit_form" action-url="{:url('cate/editPost')}">
+                                        <input type="hidden" name="id" value="{$res.id}">
+                                        <div class="form-group">
+                                            <label for="" class="col-sm-2 control-label no-padding-right">上级栏目</label>
+                                            <div class="col-sm-6">
+                                                <select name="pid">
+                                                    <option value="0">顶级栏目</option>
+                                                    {volist name="pid" id="p"}
+                                                        {if condition="$res.id neq $p.id"}
+                                                            <option value="{$p.id}"
+                                                                    {if condition="$res.pid eq $p.id"}selected="selected"{/if}>
+                                                            {if condition="$p['level'] neq 0"}|{/if}
+                                                            <?php echo str_repeat('-',$p['level']*4); ?>
+                                                            {$p.catename}
+                                                            </option>
+                                                        {/if}
+                                                    {/volist}
+                                                </select>
+                                            </div>
+                                            <p class="help-block col-sm-4 red">* 必填</p>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="" class="col-sm-2 control-label no-padding-right">栏目名称</label>
+                                            <div class="col-sm-6">
+                                                <input class="form-control" value="{$res.catename}"  placeholder="" name="catename" type="text">
+                                            </div>
+                                            <p class="help-block col-sm-4 red">* 必填</p>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="" class="col-sm-2 control-label no-padding-right">关键词</label>
+                                            <div class="col-sm-6">
+                                                <input class="form-control" value="{$res.keywords}"  placeholder="" name="keywords" type="text">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="" class="col-sm-2 control-label no-padding-right">描述</label>
+                                            <div class="col-sm-6">
+                                                <textarea name="desc" class="form-control">{$res.desc}</textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="" class="col-sm-2 control-label no-padding-right">栏目类型</label>
+                                            <div class="col-sm-6">
+                                                <div class="radio" style="float:left; margin-right:10px;">
+                                                    <label>
+                                                        <input {if condition="$res['type'] eq 1"}checked="checked"{/if} name="type" value="1"  type="radio">
+                                                        <span class="text">文章列表</span>
+                                                    </label>
+                                                </div>
+                                                <div class="radio" style="float:left; margin-right:10px;">
+                                                    <label>
+                                                        <input {if condition="$res['type'] eq 2"}checked="checked"{/if} name="type" class="inverted" value="2" type="radio">
+                                                        <span class="text">单页</span>
+                                                    </label>
+                                                </div>
+                                                <div class="radio" style="float:left; margin-right:10px;">
+                                                    <label>
+                                                        <input {if condition="$res['type'] eq 3"}checked="checked"{/if} name="type" class="inverted" value="3" type="radio">
+                                                        <span class="text">时光轴</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="" class="col-sm-2 control-label no-padding-right">内容</label>
+                                            <div class="col-sm-6">
+                                                <textarea name="content" class="form-control" rows="5" cols="50">{$res.content|urldecode}</textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-sm-offset-2 col-sm-10">
+                                                <button type="button" class="btn btn-default" onclick="SaveInfoEdit()">保存信息</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{include file="public/foot"}
+

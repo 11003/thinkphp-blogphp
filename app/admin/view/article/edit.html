@@ -1,0 +1,191 @@
+{block name="page_style"}
+<link href="https://cdn.bootcss.com/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.css" rel="stylesheet">
+<link rel="stylesheet" href="__AD__/editormd/css/editormd.min.css" />
+<link href="https://cdn.bootcss.com/Dropify/0.2.2/css/dropify.min.css" rel="stylesheet">
+{/block}
+{include file="public/css"}
+<style>
+    .bootstrap-tagsinput{
+        padding: 5px;}
+</style>
+{include file="public/css"}
+<div class="main-container container-fluid">
+    <div class="page-container">
+        <div class="page-content" style="margin-left: 0;">
+            <div class="page-body">
+
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12 col-xs-12">
+                        <div class="widget">
+                            <div class="widget-header bordered-bottom bordered-blue">
+                                <span class="widget-caption">新增文章</span>
+                            </div>
+                            <div class="widget-body">
+                                <div id="horizontal-form">
+                                    <form class="form-horizontal"  id="edit_form" action-url="{:url('article/editPost')}">
+                                        <input type="hidden" name="id" value="{$res.id}">
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label no-padding-right">栏目</label>
+                                            <div class="col-sm-6">
+                                                <select name="cid">
+                                                    {volist name="pid" id="p"}
+                                                    <option {if condition="$p.id eq $res.cid"}selected="selected"{/if} value="{$p.id}" <?php if($p['id'] == 14 || $p['id'] == 36){echo "disabled";}?>>
+                                                    {if condition="$p.level neq 0"}├ {/if}
+                                                    <?php echo str_repeat('-',$p['level']*4) ?>
+                                                        {$p.catename}
+                                                    </option>
+                                                    {/volist}
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label no-padding-right">文章名称</label>
+                                            <div class="col-sm-6">
+                                                <input class="form-control" value="{$res.title}"  placeholder="" name="title" type="text">
+                                            </div>
+                                            <p class="help-block col-sm-4 red">* 必填</p>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label no-padding-right">副标题</label>
+                                            <div class="col-sm-6">
+                                                <textarea name="desc" class="form-control">{$res.desc}</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label no-padding-right">是否推荐</label>
+                                            <div class="col-sm-6">
+                                                <div class="radio">
+                                                    <label>
+                                                        <input {if condition="$res.rec eq 1"}checked{/if} name="rec" type="radio" value="1" class="colored-blue">
+                                                        <span class="text">是</span>
+                                                    </label>
+                                                </div>
+                                                <div class="radio">
+                                                    <label>
+                                                        <input {if condition="$res.rec eq 0"}checked{/if} name="rec" type="radio" value="0" class="colored-danger">
+                                                        <span class="text">否</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label no-padding-right">查看数量</label>
+                                            <div class="col-sm-6">
+                                                <input class="form-control" value="{$res.look}" placeholder="" name="look" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label no-padding-right">点赞数量</label>
+                                            <div class="col-sm-6">
+                                                <input class="form-control" value="{$res.click}" placeholder="" name="click" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label no-padding-right">关键词</label>
+                                            <div class="col-sm-6">
+                                                <input class="form-control" type="text" name="keywords" value="{$res.keywords}" data-role="tagsinput"/>
+                                            </div>
+                                            <p class="help-block col-sm-4 red">* 输入后按enter</p>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label no-padding-right">封面图</label>
+                                            <div class="col-sm-6">
+                                                <input type="file" id="file" class="dropify" data-default-file="{$res.pic}" data-allowed-file-extensions="*" data-height="100"/><br>
+                                                <input type="text" class="form-control" placeholder="封面图地址" name="pic" value="{$res.pic}">
+                                                <input type="hidden" name="del_url" value="{$res.del_url}">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label no-padding-right">内容</label>
+                                            <div class="col-sm-12">
+                                                <div id="test-editor" style="z-index: 999">
+    <textarea style="display:none;"  name="content">{$res.editor_html_code|htmlspecialchars}</textarea>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn btn-default" style="position: fixed;top: 95%;left: 25%;z-index: 9999;" onclick="SaveInfoEdit()">保存信息</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{include file="public/foot"}
+{block name="page_script"}
+<script src="https://cdn.bootcss.com/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
+<script src="https://cdn.bootcss.com/Dropify/0.2.1/js/dropify.min.js"></script>
+<script src="__AD__/editormd/editormd.min.js"></script>
+<script>
+    var editor = editormd("test-editor", {
+        width  : "100%",
+        height : "100%",
+        path   : "__AD__/editormd/lib/",
+        pluginPath : "__AD__/editormd/plugin/",
+        saveHTMLToTextarea : true,    // 保存 HTML 到 Textarea
+        htmlDecode : "style,script,iframe|on*",
+        imageUpload    : true,
+        imageFormats   : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+        imageUploadURL : "/api/editorUploadImg",
+    });
+    editor.getHTML();           // 获取 Textarea 保存的 HTML 源码
+    editor.getPreviewedHTML();  // 获取预览窗口里的 HTML，在开启 watch 且没有开启 saveHTMLToTextarea 时使用
+
+    var drEvent = $('.dropify').dropify({
+        messages: {
+            'default': '在这里上传图片',
+            'replace': '在这里替换新的图片',
+            'remove': '删除',
+            'error': '哦噢，出错啦',
+        }
+    });
+
+    drEvent.on('dropify.beforeClear', () => {
+        var formData = new FormData();
+        formData.append('file',$('input[name=del_url]').val());
+        formData.append('id',$('input[name=id]').val());
+        formData.append('db_name','article');
+        $.ajax({
+            url: '/api/deleteImg',
+            type: 'POST',
+            success: function(data){
+                if(data.code) {
+                    layer.msg('删除成功!');
+                    $('input[name=pic]').val("");
+                    $('input[name=del_url]').val("");
+                }
+            },
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    });
+
+
+    function upload(){
+        var formData = new FormData($("#uploadForm")[0]);
+        $.ajax({
+            url: "{:url('Article/editPost')}",
+            type: 'POST',
+            data: formData,
+            async: false,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(res) {
+                alert(res.msg);
+            }
+        });
+    }
+</script>
+{/block}
+

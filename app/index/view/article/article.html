@@ -1,0 +1,336 @@
+{include file="public/head"}
+<link rel="stylesheet" href="__IN__/style/article.min.css" type="text/css" />
+<style>#zoom p{color:#101010}#zoom p a{color:#4183c4 !important;}</style>
+<link href="https://cdn.bootcss.com/highlight.js/9.15.10/styles/atom-one-dark.min.css" rel="stylesheet">
+<div id="wrapper">
+    <div id="container">
+        <div id="content" style="width: 826px;">
+            <div class="post"  {if !empty($confres.fixed)}  style="margin-top: 60px;" {else/}  style="margin-top: 10px;" {/if}>
+            {include file="public/xue" /}
+
+                <div class="title_container" style="margin-bottom: 15px">
+                    <h1 class="article_title">{$res.title}</h1>
+                    <span class="single_info">时间: {$res.create_time}
+                    </span>
+                    <span class="single_info">
+                        🕵️‍围观群众: {$res.look}
+                    </span>
+                    {if $res['keywords']}
+                    <span class="single_info tag">
+                        📌标签:
+                        <?php
+                            $arr=explode(',',$res['keywords']);
+                            foreach($arr as $k=>$v){
+                                echo "<a rel='tag' href='/search/index?key=$v'>$v</a>";
+                            }
+                            ?>
+                    </span>
+                    {/if}
+                </div>
+                <ul class="menu" id="menu-box">
+                    <div class="menu-close menu-box-title">&nbsp;</div>
+                </ul>
+                <div class="div-content animated fadeInLeft">
+                    <div id="zoom">
+                        {if $res['desc']}
+                        <blockquote>
+                            <p>{$res.desc|trim}</p>
+                        </blockquote>
+                        {/if}
+                        {$res.content}
+                    </div>
+                    <div id="BottomNavOver" style="height: 80px;">
+                        <div style="float: left; font-size: 12px;">
+                            {if condition="$prev neq ''"}
+                            <a href="/article/{$res.cid}/{$prev}" onmouseover="prev_title()" id="prev_title">上一篇</a>
+                            {else/}
+                            <span>上一篇没有了</span>
+                            {/if}
+                        </div>
+                        <div style="float: right; padding-right: 20px; width: 120px;" class="div">
+                            {if condition="$next neq ''""}
+                            <a href="/article/{$res.cid}/{$next}" onmouseover="next_title()" id="next_title">下一篇</a>
+                            {else/}
+                            <span>下一篇没有了</span>
+                            {/if}
+                        </div>
+
+                        <div class="clear"></div>
+                    </div>
+                </div>
+
+                <div class="clear"></div>
+                <div>
+                    <div class="user_like_article">😍猜您喜欢的文章
+                    </div>
+                    <ul class="read" style="list-style-type: none; margin-top: 10px; width: 780px;">
+
+                        {volist name="rec" id="vo"}
+                        <li style="margin:1rem auto">
+                            <a href="/article/{$vo.cid}/{$vo.id}"><span style="margin-top: -5px;color: #0069d6;">{$vo.title}</span></a>
+                        </li>
+                        {/volist}
+                    </ul>
+                </div>
+                <div class="clear">
+                </div>
+                <div class="comment-group">💬{$comment_count}评论</div>
+                <div class="comments_wrap" style="margin-top: 15px;">
+                    {if condition="$Request.session.user_name"}
+                    <form class="form" id="form1">
+                        <input type="hidden" name="aid" value="{$res.id}">
+                        <input type="hidden" name="cid" value="{$res.cid}">
+                        <div class="user_info">
+                            <input type="text" value="{$Request.session.user_name|urldecode}" class="v-input" name="user_name" readonly>
+                            <input type="email" name="user_email" value="{$Request.session.user_email|urldecode}"  class="v-input" readonly>
+                            <input name="link" value="{$Request.session.user_link|urldecode}" class="v-input" type="url" readonly>
+                        </div>
+                        <textarea id="demo" name="user_comment"  class="textarea" style="display: none;"></textarea>
+                        <a href="javascript:;" class="button" id="get_comment">提交</a>
+                        <div style="float: right;margin: 12px 20px 10px 0;">
+                            <label style="cursor: pointer;vertical-align:middle;"><input style="vertical-align:middle;display:inline-block;" type="checkbox" value="1" name="send_email"/>提醒一下博主</label>
+                        </div>
+                        <!--<a href="javascript:;" class="button" onclick="back()">退出</a> !-->
+                    </form>
+                    {else/}
+                    <form class="form" id="form1">
+                        <input type="hidden" name="aid" value="{$res.id}">
+                        <input type="hidden" name="cid" value="{$res.cid}">
+                        <div class="user_info">
+                            <input type="text" class="v-input" placeholder="请输入你的姓名..." name="user_name" >
+                            <input type="email" name="user_email" class="v-input" placeholder="请输入你的邮箱...">
+                            <input name="link" placeholder="网址(http://)" class="v-input" type="url">
+                        </div>
+                        <textarea id="demo" name="user_comment" style="display: none;"></textarea>
+                        <a href="javascript:;" class="button" id="get_comment">提交</a>
+                        <div style="float: right;margin: 12px 20px 10px 0;">
+                            <label style="cursor: pointer;"><input type="checkbox" value="1" name="send_email"/>提醒一下博主</label>
+                        </div>
+                    </form>
+                    {/if}
+                    <!--  Comment END -->
+
+                    <!--评论-->
+                    <div id="blog-comment" class="blog-comment" style="margin-top: 8em;">
+                        <li>
+                            {volist name="comment" id="vo"}
+                            <div class="comment ">
+                                <div class="content">
+                                    <a href="{$vo.link|urldecode?:'#'}" class="author">{$vo.user_name|urldecode}</a>
+                                    <div class="metadata">
+                                        <div class="date">
+                                            {$vo.create_time|transfer_time}
+                                            <span class="btn-reply" data-targetid="{$vo.id}" data-targetname="{$vo.user_name|urldecode}">回复</span>
+                                        </div>
+                                    </div>
+                                    <div class="text">
+                                        {$vo.user_comment|urldecode}
+                                    </div>
+                                </div>
+                            </div>
+                            {volist name="reply" id="voo"}
+                            {if condition="$voo.mid eq $vo.id"}
+                            <!--huifu-->
+                            <div class="comment" style="margin-left: 25px;min-height: 50px;">
+                                <div class="content">
+                                    {if $voo.uid==1}
+                                    <a class="author" style="color:#f2711c">{$voo.reply_name}<span class="me">作者</span></a> 回复 <a class="author">{$voo.uName|urldecode}</a>
+                                    {else/}
+                                    <a class="author" style="color:#f2711c">{$voo.reply_name}</a> 回复 <a class="author">{$voo.uName|urldecode}</a>
+                                    {/if}
+                                    <div class="metadata">
+                                        <div class="date">
+                                            {$voo.create_time|transfer_time}
+                                            <span class="btn-reply" data-targetid="{$vo.id}" data-targetname="{$voo.reply_name}">回复</span>
+                                        </div>
+                                    </div>
+                                    <div class="text">
+                                        {$voo.content|urldecode}
+                                    </div>
+                                </div>
+                            </div>
+                            <!--huifu end-->
+                            {/if}
+                            {/volist}
+                            {/volist}
+                        </li>
+                        <div class="replycontainer layui-hide">
+                            <input type="hidden" name="mid" value="">
+                            <input type="hidden" name="uid" value="">
+                            <input type="hidden" name="uName" value="">
+                            <input type="hidden" name="aid" value="{$res.id}">
+
+                            <div class="layui-form-item"><textarea name="content"
+                                                                   placeholder="请输入回复内容"
+                                                                   class="layui-textarea reply_content"
+                                                                   style="min-height:80px;"></textarea>
+                            </div>
+                            <div class="layui-form-item">
+                                <button class="layui-btn layui-btn-xs UserReply">提交</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clear">
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="sidebar">
+        <div class="widget single" id="newdigg">
+            <div class="single_views">
+                <span class="textcontainer">
+                    <span class="votecount">{$res.click}</span>
+                </span>
+                <span class="bartext" id="bar">
+                    <a href="javascript:;" id="user_like" class="zanimg like shake shake-hard" cid="{$res.cid}" aid="{$res.id}">
+                    </a>
+                </span>
+                <span class="text">赞</span>
+                <span class="text love" style="width: 110px;">人</span>
+            </div>
+        </div>
+        <!-- 右侧 -->
+        <div class="widget  animated fadeInRight">
+            <p class="tuijian" style="">相关推荐</p>
+            <ul id="ulHot">
+                {volist name="hotres" id="vo"}
+                {if condition="$vo.pic neq ''"}
+                <li style="border-bottom:dashed 1px #ccc;height:70px;">
+
+                    <div class="hot_img">
+                        <a href="/article/{$vo.cid}/{$vo.id}">
+                            <img class="scale" src="{$vo.pic}" width="100%" title="{$vo.title}" /></a>
+                    </div>
+                    <div class="hot_title">
+                        <a href="/article/{$vo.cid}/{$vo.id}" title="{$vo.title}">{$vo.title}</a>
+                    </div>
+
+                </li>
+                {else/}
+                <li style="border-bottom:dashed 1px #ccc;margin-bottom:15px;">
+
+                    <div class="hot_title2">
+                        <a href="/article/{$vo.cid}/{$vo.id}" title="{$vo.title}">{$vo.title}</a>
+                    </div>
+
+                </li>
+
+                {/if}
+                    {/volist}
+            </ul>
+        </div>
+
+        <div class="widget portrait">
+            <div class="textwidget animated bounceInUp">
+                <a href="{$rec_right.url}" class="">
+                    <img src="{$rec_right.pic}" onmouseover="rightimg()"
+                                                id="RigthImg"  height="175" width="175" title="{$rec_right.desc}" alt="{$rec_right.desc}">
+                    <p style="text-align: center;margin-top: 12px;width: 100%">{$rec_right.desc}</p>
+                </a>
+                <br><br>
+            </div>
+        </div>
+    </div>
+    <div class="clear">
+    </div>
+    </div>
+</div>
+{include file="public/foot"}
+
+{include file="public/script"}
+{block name="script"}
+<script type="text/javascript" src="__AD__/layui/layui.all.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.9/highlight.min.js"></script>
+<script src="__IN__/style/js/article.js"></script>
+<script>
+$("title").html("{$res.title} - {$confres.seo_name}");
+
+{present name="$prev"}
+function prev_title() {
+    layer.tips('{$prev_title}', '#prev_title', {
+        tips: [3, '#101010']
+    });
+}
+{/present}
+{present name="$next"}
+function next_title() {
+    layer.tips('{$next_title}', '#next_title', {
+        tips: [2, '#101010']
+});
+}
+{/present}
+{present name="$rec_right"}
+function rightimg() {
+    layer.tips('{$rec_right.desc}', '#RigthImg', {
+      tips: [4, '#101010']
+    });
+}
+{/present}
+
+layui.use('layedit',function(){
+var layedit = layui.layedit;
+layedit.set({
+  uploadImage: {
+    url: '{:url("Article/uploadImg")}' //接口url
+  }
+});
+  var index = layedit.build("demo");
+  $("#get_comment").click(function() {
+    layedit.sync(index);
+    $.ajax({
+      url: "{:url('Article/comment')}",
+      data: $("#form1").serialize(),
+      type: 'POST',
+      dataType: "json",
+      async: false,
+      success: function(res) {
+        if (res.status == 1) {
+          layer.alert(res.msg, {
+              title: "操作",
+              btn: ['确定']
+            },
+            function() {
+              window.parent.location.reload();
+            });
+
+        } else {
+          layer.msg(res.msg, {
+            anim: 6
+          });
+        }
+      }
+    })
+  });
+});
+
+
+  //回复
+  $(".UserReply").click(function() {
+    let data = {};
+    data['mid'] = $("input[name=mid]").val();
+    data['content'] = $(".reply_content").val();
+    data['aid'] = $("input[name=aid]").val();
+    data['uName'] = $("input[name=uName]").val();
+    $.ajax({
+      url: "{:url('Article/reply')}",
+      data: data,
+      type: 'POST',
+      dataType: "json",
+      async: false,
+      cache: false,
+      success: function(res) {
+        if (res.status == 1) {
+          window.parent.location.reload();
+        } else {
+          layer.msg(res.msg, {
+            anim: 6
+          });
+        }
+      }
+    })
+  });
+</script>
+{/block}

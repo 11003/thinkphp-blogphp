@@ -1,0 +1,70 @@
+{include file="public/css"}
+<div class="main-container container-fluid">
+    <div class="page-container">
+        <div class="page-content" style="margin-left: 0;">
+            <div class="page-body">
+
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12 col-xs-12">
+                        <div class="widget">
+                            <div class="widget-header bordered-bottom bordered-blue">
+                                <span class="widget-caption">新增配置</span>
+                            </div>
+                            <div class="widget-body">
+                                <div id="horizontal-form">
+                                    <form class="form-horizontal" id="edit_form" action-url="{:url('conf/editPost')}">
+                                        <input class="form-control" value="{$res.id}" placeholder="" name="id" type="hidden">
+                                        <div class="form-group">
+                                            <label for="" class="col-sm-2 control-label no-padding-right">中文名称</label>
+                                            <div class="col-sm-6">
+                                                <input class="form-control" value="{$res.cn_name}" placeholder="" required name="cn_name" type="text">
+                                            </div>
+                                            <p class="help-block col-sm-4 red">* 必填</p>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="" class="col-sm-2 control-label no-padding-right">英文名称</label>
+                                            <div class="col-sm-6">
+                                                <input class="form-control" value="{$res.en_name}"  placeholder=""name="en_name" type="text">
+                                            </div>
+                                            <p class="help-block col-sm-4 red">* 必填</p>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="" class="col-sm-2 control-label no-padding-right">配置类型</label>
+                                            <div class="col-sm-6">
+                                                <select name="type" class="form-control">
+                                                    <option value="0" disabled="">请选择配置类型</option>
+                                                    <option {if condition="$res['type'] eq 1"}selected="selected"{/if} value="1">单行文本框</option>
+                                                    <option {if condition="$res['type'] eq 2"}selected="selected"{/if} value="2">文本域</option>
+                                                    <option {if condition="$res['type'] eq 3"}selected="selected"{/if} value="3">单选按钮</option>
+                                                    <option {if condition="$res['type'] eq 4"}selected="selected"{/if} value="4">复选按钮</option>
+                                                    <option {if condition="$res['type'] eq 5"}selected="selected"{/if} value="5">下拉菜单</option>
+                                                </select>
+                                            </div>
+                                            <p class="help-block col-sm-4 red">* 必填</p>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="username" class="col-sm-2 control-label no-padding-right">描述</label>
+                                            <div class="col-sm-6">
+                                                <textarea name="values" class="form-control">{$res.values}</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-offset-2 col-sm-10">
+                                                <button type="button" class="btn btn-default" onclick="SaveInfoEdit()">保存信息</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file="public/foot"}
+

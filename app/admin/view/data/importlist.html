@@ -1,0 +1,111 @@
+{extend name="public/base" /}
+{block name="main"}
+<div class="page-body">
+    <div class="wrapper wrapper-content">
+        <!-- Panel Other -->
+        <div class="ibox float-e-margins">
+            <div class="ibox float-e-margins">
+
+                <div class="buttons-preview">
+                    <a  class="btn btn-blue" href="{:url('data/index')}" autocomplete="off"><i class="fa fa-backward"></i>&nbsp;返回</a>
+                </div>
+                <div class="ibox-content">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>SQL文件名称</th>
+                            <th>卷数</th>
+                            <th>压缩</th>
+                            <th>数据大小</th>
+                            <th>备份时间</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {foreach name='list' item='data'}
+                        <tr>
+
+                            <td>{$data.time|date='Ymd-His',###}</td>
+                            <td>{$data.part}</td>
+                            <td>{$data.compress}</td>
+                            <td>{$data.size|format_bytes}</td>
+                            <td>{$key}</td>
+                            <td class="status">-</td>
+                            <td class="action">
+                                {if authCheck('data/handler')}
+                                <a class="db-down" href="{:url('data/down',['time'=>$data['time']])}"><button type="button" class="btn btn-success btn-sm"><i class="fa fa-download"></i> 下载</button></a>
+                                <!--<a class="db-import" onclick="return confirm('确定要还原吗？')" href="{:url('data/import',['time'=>$data['time']])}"><button type="button" class="btn btn-info btn-sm"><i class="fa fa-refresh"></i> 还原</button></a>-->
+                                <a class="ajax-get confirm" data-href="{:url('data/del',['time'=>$data['time']])}"><button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> 删除</button></a>
+                                {/if}
+                            </td>
+                        </tr>
+                        {/foreach}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="page_script"}
+<script>
+  $(".db-import").click(function(){
+    var self = this, status = ".";
+
+    $(this).parent().prevAll('.status').html("").html('等待还原');
+
+    $.get(self.href, success, "json");
+    window.onbeforeunload = function(){ return "正在还原数据库，请不要关闭！" }
+    return false;
+
+    function success(data){
+
+      if(data.code==1){
+
+        $(self).parent().prev().text(data.msg);
+
+        if(data.data.part){
+          $.get(self.href,
+            {"part" : data.data.part, "start" : data.data.start},
+            success,
+            "json"
+          );
+
+        }  else {
+          layer.alert(data.msg);
+          //window.onbeforeunload = function(){ return null; }
+        }
+      } else {
+        layer.alert(data.msg);
+      }
+    }
+  });
+
+  $(".confirm").click(function () {
+    var url = $(this).data('href');
+    layer.confirm('确定要删除吗？', {
+        icon: 3,
+        title: '提示'
+      },
+      function() {
+        $.getJSON(url, function(res) {
+          if (res.code == 1) {
+            layer.msg(res.msg, {
+              icon: 1
+            });
+            setTimeout(function() {
+                window.parent.location.reload();
+              },
+              800)
+          } else {
+            layer.msg(res.msg, {
+              anim: 6
+            });
+          }
+        })
+      });
+  });
+</script>
+{/block}

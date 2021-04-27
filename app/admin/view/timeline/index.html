@@ -1,0 +1,93 @@
+{extend name="public/base" /}
+{block name="main"}
+<!-- Page Body -->
+<div class="page-body">
+    <div class="row">
+        <div class="col-lg-12 col-sm-12 col-xs-12">
+            <div class="widget">
+                <div class="widget-body">
+                    <div class="col-md-5">
+                        <form autocomplete="off" method="get" action="{:url('timeline/index')}">
+                            <input value="{notempty name='keywords'}{$keywords}{/notempty}" type="text" placeholder="请输入关键词" class="form-control" name="keywords" autocomplete="off" style="display: inline-block;
+    width: 85%;">
+                            <input type="submit" value="搜索" class="btn btn-sm btn-primary">
+                        </form>
+                    </div>
+                    <?php if(authCheck('timeline/add')):?>
+                    <a href="#" id="add" addurl="{:url('timeline/add')}" title="添加时间轴" class="btn btn-sm btn-azure btn-addon"> <i class="fa fa-plus"></i> Add</a>
+                    <?php endif;?>
+
+                    <input class="btn btn-sm btn-danger" value="清空" onclick="window.location.href='index.html'" type="button">
+
+                    <?php if(authCheck('timeline/dels')):?>
+                    <input form="form" formaction="{:url('timeline/dels')}" onclick="return confirm('确定要删除吗？')" type="submit" class="btn btn-sm btn-danger" value="批量删除">
+                    <?php endif;?>
+                    <br><br>
+                    <div class="flip-scroll">
+                        <form action="" method="post" id="form">
+                            <table class="table table-bordered table-hover">
+                                <thead class="">
+                                <tr id="thead">
+                                    <th class="text-center">
+                                        <label>
+                                            <input type="checkbox" class="inverted" >
+                                            <span class="text" style="cursor: pointer" id="fck"></span>
+                                        </label>
+                                    </th>
+                                    <th class="text-center" width="10%">ID</th>
+                                    <th class="text-center" width="10%">时间轴标题</th>
+                                    <th class="text-center">内容</th>
+                                    <th class="text-center">URL</th>
+                                    <th class="text-center">创建时间</th>
+                                    <th class="text-center" width="20%">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {volist name="res" id="vo"}
+                                <tr id="tr_{$vo.id}">
+                                    <td class="text-center" >
+                                        <label>
+                                            <input type="checkbox" name="id[]" value="{$vo.id}" class="inverted sck">
+                                            <span class="text" style="cursor: pointer"></span>
+                                        </label>
+                                    </td>
+                                    <td align="center">{$vo.id}</td>
+                                    <td>{$vo.title}</td>
+                                    <td>{$vo.content}</td>
+                                    <td align="center">{$vo.url}</td>
+                                    <td align="center">{$vo.create_time}</td>
+                                    <td align="center">
+                                        <?php if(authCheck('timeline/edit')):?>
+                                        <a href="javascript:void(0)" title="修改" class="btn btn-info btn-xs edit update" updateurl="{:url('timeline/edit',array('id'=>$vo['id']))}"><i class="fa fa-edit"></i> Edit</a>
+                                        <?php endif;?>
+
+                                        <?php if(authCheck('timeline/delete')):?>
+                                        <a href="javascript:void(0)" title="删除" class="btn btn-danger btn-xs delete" deleteurl="{:url('timeline/delete',array('id'=>$vo['id']))}"><i class="fa fa-trash-o"></i> Delete</a>
+                                        <?php endif;?>
+                                        <?php if(authCheck('timeline/edit')):?>
+                                        {if condition="$vo.status eq 1"}
+                                        <a href="javascript:void(0)" title="启用" class="btn btn-maroon btn-xs fabu comment-post-status" fabuurl="{:url('timeline/status',array('id'=>$vo['id'],'status'=>0))}"><i class="fa fa-level-down"></i>禁用</a>
+                                        {else/}
+                                        <a href="javascript:void(0)" title="禁用" class="btn btn-azure btn-xs fabu comment-post-status" fabuurl="{:url('timeline/status',array('id'=>$vo['id'],'status'=>1))}"><i class="fa fa-level-up"></i>启用</a>
+                                        {/if}
+                                        <?php endif;?>
+                                    </td>
+                                </tr>
+                                {/volist}
+                                </tbody>
+                            </table>
+
+                        </form>
+                    </div>
+                    <div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Page Body -->
+{/block}
+
+
+

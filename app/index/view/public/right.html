@@ -1,0 +1,80 @@
+<div id="xh_sidebar"
+     style="background:#ffffff;padding:15px;box-shadow:0 2px 2px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.06), 0 1px 5px 0 rgba(0,0,0,0.12);">
+
+         <div class="widget">
+
+<div style="width:250px;height:52px;margin-bottom:15px;">
+    <h1>热点文章</h1>
+</div>
+<ul id="ulHot">
+{volist name="hotres" id="vo"}
+    {if condition="$vo.pic neq ''"}
+    <li class="hot_list1">
+        <div class="hot_list_item_1">
+            <a href="/article/{$vo.cid}/{$vo.id}">
+                <img class="scale" src="{$vo.pic}" width="100%" title="{$vo.title}" />
+            </a>
+        </div>
+        <div style="float:right;width:145px;height:52px; overflow:hidden;">
+            <a class="text" href="/article/{$vo.cid}/{$vo.id}" title="{$vo.title}">{$vo.title}</a>
+        </div>
+    </li>
+    {else/}
+    <li class="hot_list2">
+        <div class="hot_list_item_2">
+            <a class="text" href="/article/{$vo.cid}/{$vo.id}" title="{$vo.title}">{$vo.title}</a>
+        </div>
+    </li>
+    {/if}
+
+{/volist}
+
+</ul>
+</div>
+    <style>
+       #tagscloud a.tagscloud-item{color: #fff;padding: 3px;border-radius: 5px;width: 25%;margin: 3px;float: left;opacity: .6}
+       #tagscloud a.tagscloud-item:hover{opacity: 1;}
+    </style>
+    <div class="clear"></div>
+    <div class="widget">
+        <div style="width:250px;height:32px;margin-bottom:15px;">
+            <h1>标签列表</h1>
+        </div>
+        <div id="tagscloud">
+            {volist name="cateres" id="vo"}
+            {if condition="$vo['children'] neq 0"}
+            {volist name="$vo.children" id="voo"}
+            <a class="shake shake-little tagscloud-item" href="/{if condition="$voo['type'] eq 1"}artlist{elseif condition="$voo['type'] eq 2"}imglist{elseif condition="$voo['type'] eq 3"}imglist{/if}/{$voo['id']}"  class="tagc1" title="查看 {$voo.catename} 全部文章">{$voo.catename}</a>
+            {/volist}
+            {/if}
+            {/volist}
+        </div>
+    </div>
+    <div class="clear"></div>
+            <div class="widget links">
+                <div style="width:250px;height:32px;margin-bottom:15px;margin-top: 35px;">
+                    <h1><a style="color: #555;" title="查看更多" href="/page/48">友情链接</a></h1>
+                </div>
+                <ul>
+
+                {volist name="link" id="vo"}
+                <li>
+                    <span class="shake shake-little">
+                        <a href="{$vo['url']}" target='_blank' title="{$vo.desc}">{$vo.name}</a>
+                    </span>
+                </li>
+                {/volist}
+
+                </ul>
+                <div class="clear">
+                </div>
+            </div>
+            <div style="margin: auto">
+                <div align="center">
+                    <img src="{$rec_right.pic}" onmouseover="rightimg()" onclick="javascript:location.href='{$rec_right.url}'" height="175" width="175"  id="RigthImg" style="" title="{$rec_right.desc}">
+                    <p style="margin-top: 12px;width: 100%">{$rec_right.desc}</p>
+                </div>
+            </div>
+        </div>
+        <div class="clear">
+        </div>

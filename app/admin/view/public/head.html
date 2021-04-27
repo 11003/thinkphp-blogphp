@@ -1,0 +1,42 @@
+<div class="page-breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="fa fa-dashboard"></i>
+            <a href="{:url('index/index')}">Home</a>
+        </li>
+        <li class="active">{$title}</li>
+    </ul>
+</div>
+<!-- /Page Breadcrumb -->
+<!-- Page Header -->
+<div class="page-header position-relative">
+    <div class="header-title">
+        <h1>
+            Hello,{$Request.session.username}{$danger_info_by_pass}!
+            现在：<?php echo date('Y-m-d H:i'); ?>
+        </h1>
+    </div>
+    <!--Header Buttons-->
+
+    <div class="header-buttons">
+
+        <a class="sidebar-toggler" href="#">
+            <i class="fa fa-arrows-h"></i>
+        </a>
+        <a class="refresh" id="refresh-toggler" href="">
+            <i class="glyphicon glyphicon-refresh"></i>
+        </a>
+        <a class="fullscreen" id="fullscreen-toggler" href="#">
+            <i class="glyphicon glyphicon-fullscreen"></i>
+        </a>
+        <a class="refresh" id="trash" title="清除缓存" href="#">
+            <i class="glyphicon glyphicon-trash"></i>
+        </a>
+        <?php if(authCheck('conf/awesome')):?>
+        <a class="sidebar" title="图标库"  href="{:url('conf/awesome')}">
+            <i class="fa fa-apple"></i>
+        </a>
+        <?php endif;?>
+    </div>
+    <!--Header Buttons End-->
+</div>

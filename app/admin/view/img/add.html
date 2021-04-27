@@ -1,0 +1,89 @@
+{include file="public/css"}
+<div class="main-container container-fluid">
+    <div class="page-container">
+        <div class="page-content" style="margin-left: 0;">
+            <div class="page-body">
+
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12 col-xs-12">
+                        <div class="widget">
+                            <div class="widget-header bordered-bottom bordered-blue">
+                                <span class="widget-caption">新增轮播图</span>
+                            </div>
+                            <div class="widget-body">
+                                <div id="horizontal-form">
+                                    <form class="form-horizontal"  action-url="{:url('img/addPost')}" id="add_form" enctype="multipart/form-data">
+                                        <div class="form-group">
+                                            <label for="" class="col-sm-2 control-label no-padding-right">描述</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" name="desc" required="required" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="" class="col-sm-2 control-label no-padding-right">轮播图</label>
+                                            <div class="col-sm-6">
+                                                <input type="file" id="file"/>
+                                                <input type="hidden" name="pic">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="" class="col-sm-2 control-label no-padding-right">地址</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" name="url" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="" class="col-sm-2 control-label no-padding-right">广告位</label>
+                                            <div class="col-sm-6">
+                                                <div class="radio" style="float:left; margin-right:10px;">
+                                                    <label>
+                                                        <input name="rec_index" class="inverted" value="1" type="checkbox">
+                                                        <span class="text">轮播图位置</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-sm-offset-2 col-sm-10">
+                                                <button type="button" class="btn btn-default" onclick="SaveInfoAdd()">保存信息</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{include file="public/foot"}
+<script>
+    function upload(){
+        var formData = new FormData($("#uploadForm")[0]);
+        $.ajax({
+            url: "{:url('img/addPost')}",
+            type: 'POST',
+            data: formData,
+            async: false,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(res) {
+                if(res.status == 1){
+                    layer.msg(res.msg,{icon: 1});
+                    setTimeout(function() {
+                        window.parent.location.reload();
+                        layer.close(layer.index);
+                    }, 800);
+                }else{
+                    layer.msg(res.msg,{icon: 5});
+                }
+            }
+        });
+    }
+</script>

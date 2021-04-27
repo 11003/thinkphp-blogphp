@@ -1,0 +1,20 @@
+{
+    "waifu": {
+        "hour_tips": {
+            "t5-7": ["早上好！一日之计在于晨，美好的一天就要开始了"],
+            "t7-11": ["上午好！工作顺利，不要久坐，多起来走动走动哦！"],
+            "t11-14": ["中午了，工作了一个上午，现在是午餐时间！"]
+        }
+    },
+    "seasons": [
+        { "date": "01/01", "text": ["<span style=\"color:#0099cc;\">元旦</span>了呢，新的一年又开始了，今年是{year}年~"] },
+        { "date": "02/14", "text": ["又是一年<span style=\"color:#0099cc;\">情人节</span>，{year}年找到对象了嘛~"] },
+        { "date": "03/12", "text": ["今天是<span style=\"color:#0099cc;\">植树节</span>，要保护环境呀"] },
+        { "date": "04/01", "text": ["悄悄告诉你一个秘密~<span style=\"background-color:#34495e;\">今天是愚人节，不要被骗了哦~</span>"] },
+        { "date": "05/01", "text": ["今天是<span style=\"color:#0099cc;\">五一劳动节</span>，计划好假期去哪里了吗~"] },
+        { "date": "09/03", "text": ["<span style=\"color:#0099cc;\">中国人民抗日战争胜利纪念日</span>，铭记历史、缅怀先烈、珍爱和平、开创未来。"] },
+        { "date": "10/01", "text": ["<span style=\"color:#0099cc;\">国庆节</span>"] },
+        { "date": "11/05-11/12", "text": ["<span style=\"color:#0099cc;\">双十一</span>"] },
+        { "date": "12/20-12/31", "text": ["<span style=\"color:#0099cc;\">圣诞节</span>"] }
+    ]
+}

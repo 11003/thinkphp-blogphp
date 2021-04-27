@@ -1,0 +1,350 @@
+<script src="https://cdn.jsdelivr.net/npm/jquery@2.1.2/dist/jquery.min.js"></script>
+<script src="__AD__/layer/layer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.2.0/dist/js/bootstrap.min.js"></script>
+<script src="__AD__/js/skins.min.js"></script>
+<script src="__AD__/js/beyond.min.js"></script>
+<script src="__AD__/js/select2/select2.js"></script>
+
+<script>
+
+    $(window).bind("load", function () {
+        layer.photos({
+          photos: '.layer_view'
+          ,anim: 5
+        });
+    });
+    function loading(msg){
+        return layer.msg(msg, {
+            icon:16,
+            shade:[0.5, '#fff'],
+            time:false  //取消自动关闭
+        })
+    }
+    $('#file').change(function(){
+        var index = loading("数据提交中，请稍等！");
+        var f=this.files[0];
+        var formData=new FormData();
+        formData.append('file',f);
+        $.ajax({
+            url: '/api/upload',
+            type: 'POST',
+            success: function(data){
+                layer.close(index);
+                $('input[name=pic]').val(data.url);
+                $('input[name=del_url]').val(data.del_url);
+            },
+            error: function(data){
+                layer.msg(data.url);
+            },
+            data:formData,
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    });
+    //清除缓存
+    $("#trash").on('click',function(){
+        var loadingFlag;
+        loadingFlag = layer.load(0, {shade: 0.3,offset: '50%'}); //0代表加载的风格，支持0-2
+        var url = "{:url('admin/index/clear')}";
+        $.get(url,function(info){
+            if(info.code === 1){
+                layer.close(loadingFlag);
+                setTimeout(function () {location.href = info.url;}, 1000);
+            }
+            layer.msg(info.msg);
+        });
+    });
+    //增加页面
+    $('#add').on('click', function(){
+        var addurl = $(this).attr("addurl");
+        var html = $(this).prop("title");
+        layer.open({
+            type: 2,
+            title: html,
+            maxmin: true,
+            shadeClose: true, //点击遮罩关闭层
+            area : ['50%' , '100%'],
+            content: addurl
+        });
+    });
+    //修改页面
+    $('.update').on('click',function(){
+        var updateurl = $(this).attr("updateurl");
+        var html = $(this).prop("title");
+        layer.open({
+            type: 2,
+            title: html,
+            maxmin: true,
+            shadeClose: true, //点击遮罩关闭层
+            area : ['50%' , '100%'],
+            content: updateurl
+        });
+    });
+    $('.reply').on('click',function(){
+        var updateurl = $(this).attr("updateurl");
+        var html = $(this).prop("title");
+        layer.open({
+            type: 2,
+            title: html,
+            maxmin: true,
+            shadeClose: true, //点击遮罩关闭层
+            area : ['700px' , '350px'],
+            content: updateurl
+        });
+    });
+
+    //删除
+    $('.delete').on('click',function(){
+        var deleteurl = $(this).attr("deleteurl");
+        layer.confirm('确定要删除吗？',{
+            icon: 2,
+            btn:['确定','取消']
+        },function(){
+          var loadingFlag;
+          loadingFlag = layer.load(0, {shade: 0.3,offset: '50%'}); //0代表加载的风格，支持0-2
+            $.ajax({
+                type:"POST",
+                dataType:"json",
+                url:deleteurl,
+                success: function (res) {
+                    layer.close(loadingFlag);
+                    if(res.status == 1){
+                        if(res.del_url) {
+                          deleteSmImg(res.del_url);
+                        }
+                        layer.msg(res.msg,{icon: 1});
+                        setTimeout(function() {
+                            window.parent.location.reload();
+                            // window.location.href=res.url;
+                        }, 600);
+                    }else{
+                        layer.msg(res.msg,{icon: 2});
+                    }
+                }
+            });
+        });
+    });
+    function deleteSmImg(url){
+        $.ajax({
+            type:"POST",
+            url:url,
+            success: function(){
+                console.log("File delete success.")
+            }
+        });
+    }
+    $('.replydelete').on('click',function(){
+        var deleteurl = $(this).attr("deleteurl");
+        layer.confirm('确定要删除吗？',{
+            btn:['确定','取消']
+        },function(){
+          var loadingFlag;
+          loadingFlag = layer.load(0, {shade: 0.3,offset: '50%'});
+            $.ajax({
+                type:"POST",
+                dataType:"json",
+                url:deleteurl,
+                success: function (res) {
+                    layer.close(loadingFlag);
+                    if(res.status == 1){
+                        layer.msg(res.msg,{icon: 1,offset: '50%'});
+                        setTimeout(function() {
+                            self.location.reload();
+                            layer.close(layer.index);
+                        }, 600);
+                    }else{
+                        layer.msg(res.msg,{icon: 2});
+                    }
+                }
+            });
+        });
+    });
+
+   function SaveInfoAdd(){
+       var loadingFlag;
+        var formData =$("#add_form").serialize();
+        var url = $("#add_form").attr("action-url");
+        $.ajax({
+            dataType:'json',
+            url: url,
+            type: 'POST',
+            data: formData,
+            cache: false,
+            beforeSend: function () {
+                loadingFlag = layer.load(0, {shade: 0.3,offset: '50%'}); //0代表加载的风格，支持0-2
+            },
+            success: function(res) {
+                layer.close(loadingFlag);
+                if(res.status == 1){
+                    layer.msg(res.msg,{icon: 1,offset: '50%'});
+                    setTimeout(function() {
+                        window.parent.location.reload();
+                        layer.close(layer.index);
+                    }, 800);
+                }else{
+                    layer.msg(res.msg,{icon: 5});
+                }
+            }
+        });
+    }
+
+    function SaveInfoEdit(){
+        var loadingFlag;
+        var formData =$("#edit_form").serialize();
+        var url = $("#edit_form").attr("action-url");
+        $.ajax({
+            dataType:'json',
+            url: url,
+            type: 'POST',
+            data: formData,
+            cache: false,
+            beforeSend: function () {
+                loadingFlag = layer.load(0, {shade: 0.3,offset: '50%'}); //0代表加载的风格，支持0-2
+            },
+            success: function(res) {
+                layer.close(loadingFlag);
+                if(res.status == 1){
+                    layer.msg(res.msg,{icon: 1,offset: '50%'});
+                    setTimeout(function() {
+                        window.parent.location.reload();
+                        layer.close(layer.index);
+                    }, 800);
+                }else{
+                    layer.close(loadingFlag);
+                    layer.msg(res.msg,{icon: 5});
+                    // layer.msg(res.msg,{anim: 5});
+                }
+            }
+        });
+    }
+	//字符串截取
+    $(".table tr td.content").each(function(i){
+        if($(this).text().length>80){
+            $(this).attr("title",$(this).text());
+            var text = $(this).text().substring(0,80)+"...";
+            $(this).text(text);
+        }
+    });
+
+    //排序
+    $("#shiny").on('click',function(){
+        // var data = $("#form").serialize();
+        var data = $(".sort").serialize();
+        var url = $(this).attr("url");
+          $.ajax({
+            type:"POST",
+            dataType:"json",
+            url:url,
+            data:data,
+            success:function(res){
+                if(res.status == 1){
+                    layer.msg(res.msg,{icon: 1});
+                    setTimeout(function() {
+                        window.parent.location.reload();
+                        // layer.close(layer.index);
+                    }, 800);
+
+                }else{
+                    layer.msg(res.msg,{icon: 5});
+                }
+            }
+        });
+    });
+
+    //发布/推荐逻辑
+    $(".fabu").on('click',function(){
+        var url = $(this).attr('fabuurl');
+        var loadingFlag;
+        loadingFlag = layer.load(0, {shade: 0.3,offset: '50%'});
+        if($(this).hasClass('comment-post-status')) {
+            $.ajax({
+                type:"POST",
+                dataType:"json",
+                url:url,
+                success:function(res){
+                  layer.close(loadingFlag);
+                    if(res.status == 1){
+                        layer.msg(res.msg,{icon: 1});
+                        setTimeout(function() {
+                            window.parent.location.reload();
+                            // layer.close(layer.index);
+                        }, 800);
+                    }else{
+                        layer.msg(res.msg,{icon: 5});
+                    }
+                }
+            });
+        } else {
+            if($(this).hasClass('quxiao')){
+                $.ajax({
+                    type:"POST",
+                    dataType:"json",
+                    url:url,
+                    success:function(res){
+                      layer.close(loadingFlag);
+                        if(res.status == 1){
+                            layer.msg(res.msg,{icon: 1});
+                            setTimeout(function() {
+                                window.parent.location.reload();
+                                // layer.close(layer.index);
+                            }, 800);
+                        }else{
+                            layer.msg(res.msg,{icon: 5});
+                        }
+                    }
+                });
+            }else {
+                layer.prompt({title: '推荐语录，随便写点啥', formType: 2}, (text, index) =>{
+                    layer.close(index);
+                    $.ajax({
+                        type:"POST",
+                        dataType:"json",
+                        data: {desc: text},
+                        url:url,
+                        success:function(res){
+                          layer.close(loadingFlag);
+                            if(res.status == 1){
+                                layer.msg(res.msg,{icon: 1});
+                                setTimeout(function() {
+                                    window.parent.location.reload();
+                                    // layer.close(layer.index);
+                                }, 800);
+                            }else{
+                                layer.msg(res.msg,{icon: 5});
+                            }
+                        }
+                    });
+                });
+            }
+        }
+
+
+    });
+
+    //搜索
+    $("input[name=key]").keyup(function(){
+        var key = $("input[name=key]").val();
+        $("table tr:not(#thead)").hide().filter(':contains("'+key+'")').show();
+    });
+
+
+    $(".searchinput").keyup(function(){
+      var key = $(this).val();
+      if(/.*[\u4e00-\u9fa5]+.*/.test(key)) {
+        $(".sidebar-menu li").hide().filter(':contains("'+key+'")').show();
+      } else {
+        $(".sidebar-menu li").show();
+      }
+    });
+    //checkbox反选
+    /**
+     * 一般如果是标签自身自带的属性，我们用prop方法来获取；
+     * 如果是自定义的属性，我们用attr方法来获取
+     */
+    $("#fck").click(function(){
+        $(".sck").each(function(){
+            $(this).prop('checked',!$(this).prop('checked'));
+        })
+    });
+</script>

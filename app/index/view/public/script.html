@@ -1,0 +1,131 @@
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="__IN__/style/js/SuperSlide.js"></script>
+<script src="https://cdn.bootcss.com/flipcountdown/3.0.5/jquery.flipcountdown.min.js"></script>
+<!--<script type="text/javascript" src="__IN__/style/layer/layer.js"></script>-->
+<script src="https://cdn.bootcss.com/layer/2.3/layer.js"></script>
+<!--<script src="https://live2d-cdn.fghrsh.net/assets/1.4.2/waifu-tips.min.js"></script>-->
+<!--<script src="https://live2d-cdn.fghrsh.net/assets/1.4.2/live2d.min.js"></script>-->
+<!--网站加速-->
+<!--<script src="http://instantclick.io/v3.1.0/instantclick.min.js" data-no-instant></script>-->
+<!--<script data-no-instant>InstantClick.init('mousedown');</script>-->
+<!--雪花特效 start-->
+<!--<script src="https://unpkg.com/magic-snowflakes/dist/snowflakes.min.js"></script>-->
+<!--<script>-->
+    <!--var sf = new Snowflakes({color: "#FFFFFF", count: 66, minOpacity: 0.3, maxOpacity: 1});-->
+<!--</script>-->
+<!--雪花特效 end-->
+<script>
+    {notempty name="confres.effect"}
+    {$confres.effect}
+    {else/}
+        jQuery(".slideBox").slide({mainCell:".bd ul",effect:"fold",autoPlay:true});
+    {/notempty}
+
+
+   /* var OriginTitile = document.title;
+    var titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '(⊙_⊙)已隐藏•' + OriginTitile;
+            clearTimeout(titleTime);
+        } else {
+            document.title = '๑乛◡乛๑回来喽•';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            }, 1500);
+        }
+    });*/
+//随机颜色
+        function randomColor() {
+          var str = "0123456789ABCDEF";
+          var t = "#";
+          for (j = 0; j < 6; j++) {
+            t = t + str.charAt(Math.random() * str.length);
+          }
+          return t;
+        }
+
+// 标签云
+        var tagcolor = $("#tagscloud a");
+        if (tagcolor.length) {
+          for (i = 0; k = tagcolor.length, i < k; i++) {
+            var str = "0123456789ABCDEF";
+            var t = "#";
+            var x = 9;
+            var y = 0;
+            for (j = 0; j < 6; j++) {
+              t = t + str.charAt(Math.random() * str.length);
+            }
+            tagcolor[i].style.background = t;
+            // tagcolor[i].style.position = "absolute"; //打开就能使用标签云
+          }
+        }
+//鼠标特效
+        var a_idx = 0;
+        $("body").click(function(e) {
+          var a = ["❤"];
+          var $i = $("<span/>").text(a[a_idx]);
+          a_idx = (a_idx + 1) % a.length;
+          var x = e.pageX,
+            y = e.pageY;
+          $i.css({
+            "z-index": 9999,
+            "top": y - 20,
+            "left": x,
+            "position": "absolute",
+            "color": randomColor,
+            "font-size": "14px"
+          });
+          $("body").append($i);
+          $i.animate({
+              "top": y - 180,
+              "opacity": 0
+            },
+            1500,
+            function() {
+              $i.remove();
+            });
+        });
+
+//回到顶部按钮特效
+        $('#goToTopBtn').hide();
+        $(window).scroll(function() {
+          if ($(this).scrollTop() > 100) {
+            $('#goToTopBtn').stop(false, false).css({
+              'opacity': 1
+            }).fadeIn(500);
+          } else {
+            $('#goToTopBtn').fadeOut();
+          }
+        });
+//获取要定位元素距离浏览器顶部的距离
+        var navH = $("#sidebar").offset().top;
+        $(window).scroll(function() {
+          //获取滚动条的滑动距离
+          var scroH = $(this).scrollTop();
+          if (scroH >= navH) {
+            $("#sidebar").css({
+              "position": "sticky",
+              "top": 0
+            });
+          } else if (scroH < navH) {
+            $("#sidebar").css({
+              "position": "static"
+            });
+          }
+        });
+
+
+    // live2d_settings['modelId'] = 1;                  // 默认模型 ID
+    // live2d_settings['modelTexturesId'] = 10;          // 默认材质 ID
+    // live2d_settings['modelStorage'] = false;         // 不储存模型 ID
+    // live2d_settings['waifuSize'] = '150x150';
+    //     /* 在 initModel 前添加 */
+    // initModel('__IN__/style/live2d/waifu-tips.json');
+</script>
+
+<!--<script src='https://unpkg.com/nprogress@0.2.0/nprogress.js'></script>-->
+<!--<script>-->
+    <!--NProgress.start();-->
+    <!--setTimeout(function() { NProgress.done(); $('.fade').removeClass('out'); }, 1000);-->
+<!--</script>-->

@@ -1,0 +1,129 @@
+{include file="public/css"}
+<div class="main-container container-fluid">
+    <div class="page-container">
+        <div class="page-content" style="margin-left: 0;">
+            <div class="page-body">
+
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12 col-xs-12">
+                        <div class="widget">
+                            <div class="widget-header bordered-bottom bordered-blue">
+                                <span class="widget-caption">修改用户组</span>
+                            </div>
+                            <div class="widget-body">
+                                <div id="horizontal-form">
+                                    <form class="form-horizontal" id="edit_form" action-url="{:url('auth_group/editPost')}">
+                                        <input type="hidden" name="id" value="{$res.id}">
+                                        <div class="form-group">
+                                            <label for="" class="col-sm-2 control-label no-padding-right">用户组名称</label>
+                                            <div class="col-sm-6">
+                                                <input class="form-control" value="{$res.title}"  placeholder="" name="title" type="text">
+                                            </div>
+                                            <p class="help-block col-sm-4 red">* 必填</p>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="" class="col-sm-2 control-label no-padding-right">状态</label>
+                                            <div class="col-sm-6">
+                                                <div class="radio" style="float:left; margin-right:10px;">
+                                                    <label>
+                                                        <input {if condition="$res['status'] eq 1"}checked="checked"{/if} class="inverted" name="status" value="1"  type="radio">
+                                                        <span class="text">启用</span>
+                                                    </label>
+                                                </div>
+                                                <div class="radio" style="float:left; margin-right:10px;">
+                                                    <label>
+                                                        <input {if condition="$res['status'] eq 0"}checked="checked"{/if} name="status" class="inverted" value="0" type="radio">
+                                                        <span class="text">禁用</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="" class="col-sm-2 control-label no-padding-right"></label>
+                                            <div class="col-sm-8">
+                                                <table class="table table-hover">
+                                                    <thead class="bordered-darkorange">
+                                                    <tr>
+                                                        <th>配置权限</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {volist name="pid" id="authRule"}
+                                                    <tr>
+                                                        <td>
+                                                            <label>
+                                                                <?php echo str_repeat('&nbsp;', $authRule['level']*3);?>
+                                                                <input
+                                                                    <?php $arr=explode(',',$res['rules']); if(in_array($authRule['id'] ,$arr)){ echo 'checked="checked"';} ?>
+                                                                        name="rules[]"
+                                                                        value="{$authRule.id}"
+                                                                        dataid="id-{$authRule.dataid}"
+                                                                        class="inverted checkbox-parent {if condition="$authRule['level'] neq 0"} checkbox-child {/if} " type="checkbox">
+                                                                <span {if condition="$authRule['level'] eq 0"} style="font-weight:bold; font-size:14px;" {/if} class="text">{$authRule.title}</span>
+                                                            </label>
+                                                        </td>
+                                                    </tr>
+                                                    {/volist}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-sm-offset-2 col-sm-10" style="position: fixed;top: 95%;z-index: 9999;">
+                                                <button type="button" class="btn btn-default" onclick="SaveInfoEdit()">保存信息</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{include file="public/foot"}
+{block name="page_script"}
+<script>
+    /* 权限配置 */
+    $(function () {
+        //动态选择框，上下级选中状态变化
+        $('input.checkbox-parent').on('change', function () {
+            var dataid = $(this).attr("dataid");
+            $('input[dataid^=' + dataid + ']').prop('checked', $(this).is(':checked'));
+        });
+        $('input.checkbox-child').on('change', function () {
+            var dataid = $(this).attr("dataid");
+            dataid = dataid.substring(0, dataid.lastIndexOf("-"));
+            var parent = $('input[dataid=' + dataid + ']');
+            if ($(this).is(':checked')) {
+                parent.prop('checked', true);
+                //循环到顶级
+                while (dataid.lastIndexOf("-") != 2) {
+                    dataid = dataid.substring(0, dataid.lastIndexOf("-"));
+                    parent = $('input[dataid=' + dataid + ']');
+                    parent.prop('checked', true);
+                }
+            } else {
+                //父级
+                if ($('input[dataid^=' + dataid + '-]:checked').length == 0) {
+                    parent.prop('checked', false);
+                    //循环到顶级
+                    while (dataid.lastIndexOf("-") != 2) {
+                        dataid = dataid.substring(0, dataid.lastIndexOf("-"));
+                        parent = $('input[dataid=' + dataid + ']');
+                        if ($('input[dataid^=' + dataid + '-]:checked').length == 0) {
+                            parent.prop('checked', false);
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+{/block}

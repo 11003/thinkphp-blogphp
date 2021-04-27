@@ -1,0 +1,77 @@
+{extend name="public/base" /}
+{block name="main"}
+<!-- Page Body -->
+<div class="page-body">
+    <div class="row">
+        <div class="col-lg-12 col-sm-12 col-xs-12">
+            <div class="widget">
+                <div class="widget-body">
+                    <div class="flip-scroll">
+                        <form id="edit_form" action-url="{:url('conf/listsPost')}">
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                <tr id="thead">
+                                    <th class="text-center" width="10%">配置名称</th>
+                                    <th class="text-center">配置值</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {volist name="res" id="vo"}
+                                <tr>
+                                    <td style="text-align: right;line-height: 32px">{$vo.cn_name}</td>
+                                    <td style="text-align: left">
+                                        {if condition="$vo.type eq 1"}
+                                            <input type="text" class="form-control" name="{$vo.en_name}" value="{$vo.value}">
+                                        {elseif condition="$vo.type eq 2"}
+                                            <textarea class="form-control" name="{$vo.en_name}">{$vo.value}</textarea>
+                                        {elseif condition="$vo.type eq 3"}
+                                            {notempty name="$vo.values"}
+                                                <?php $arr=explode(',',$vo['values']); ?>
+                                            {/notempty}
+                                            {volist name="arr" id="voo"}
+                                                <div class="radio">
+                                                    <label>
+                                                        <input {if condition="$vo.value == $voo"}checked='checked'{/if} name="{$vo.en_name}" type="radio" value="{$voo}">
+                                                        <span class="text">{$voo}</span>
+                                                    </label>
+                                                </div>
+                                            {/volist}
+                                        {elseif condition="$vo.type eq 4"}
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input {if condition="$vo.value == $vo.values"}checked='checked'{/if} value="{$vo.values}" type="checkbox" class="colored-success" name="{$vo.en_name}">
+                                                        <span class="text">{$vo.values}</span>
+                                                    </label>
+                                                </div>
+                                        {elseif condition="$vo.type eq 5"}
+                                            {notempty name="$vo.values"}
+                                                <?php $arr2=explode(',',$vo['values']); ?>
+                                            {/notempty}
+                                            <select class="form-control" name="{$vo.en_name}">
+                                                {volist name="arr2" id="vooo"}
+                                                <option {if condition="$vo.value == $vooo"}selected='selected'{/if} value="{$vooo}">{$vooo}</option>
+                                                {/volist}
+                                            </select>
+                                        {/if}
+                                    </td>
+                                </tr>
+                                {/volist}
+                                </tbody>
+                            </table>
+                            <?php if(authCheck('conf/listspost')):?>
+                            <button type="button" class="btn btn-default" onclick="SaveInfoEdit()">保存信息</button>
+                            <?php endif;?>
+                        </form>
+                    </div>
+                    <div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Page Body -->
+{/block}
+
+
+

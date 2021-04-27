@@ -1,0 +1,70 @@
+{extend name="public/base" /}
+{block name="main"}
+<!-- Page Body -->
+
+<div class="page-body">
+
+    <div class="row">
+        <div class="col-lg-12 col-sm-12 col-xs-12">
+            <div class="widget">
+                <div class="widget-body">
+                    <div class="flip-scroll">
+                        <form action="" method="post" id="form">
+
+                            <?php if(authCheck('auth_group/add')):?>
+                            <a href="#" id="add" title="增加角色组" addurl="{:url('auth_group/add')}" class="btn btn-sm btn-azure btn-addon"> <i class="fa fa-plus"></i> Add</a>
+                            <?php endif;?>
+
+                            <table class="table table-bordered table-hover">
+                                <thead class="">
+                                <tr>
+                                    <th class="text-center" width="10%">ID</th>
+                                    <th class="text-center">用户组名称</th>
+                                    <th class="text-center">状态</th>
+                                    <th class="text-center" width="20%">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                {volist name="res" id="vo"}
+                                <tr id="group_id[{$vo.id}]">
+                                    <td align="center">{$vo.id}</td>
+                                    <td>{$vo.title}</td>
+                                    <td style="text-align: center;">
+                                        {if condition="$vo.status eq 1"}
+                                        <span class="label label-success">
+                                            启用
+                                        </span>
+                                        {else/}
+                                        <span class="label label-magenta">
+                                            禁用
+                                        </span>
+                                        {/if}
+                                    </td>
+                                    <td align="center">
+                                        <?php if(authCheck('auth_group/edit')):?>
+                                        <a href="javascript:void(0);" title="修改" class="btn btn-info btn-xs edit update layer_height" updateurl="{:url('auth_group/edit',array('id'=>$vo['id']))}"><i class="fa fa-edit"></i> Edit</a>
+                                        <?php endif;?>
+
+                                        <?php if(authCheck('auth_group/delete')):?>
+                                        <a href="javascript:void(0);" title="删除" class="btn btn-danger btn-xs delete" deleteurl="{:url('auth_group/delete',array('id'=>$vo['id']))}"><i class="fa fa-trash-o"></i> Delete</a>
+                                        <?php endif;?>
+
+                                    </td>
+                                </tr>
+                                {/volist}
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                    <div style="padding-top:10px;">
+                        {$res->render()}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Page Body -->
+{/block}

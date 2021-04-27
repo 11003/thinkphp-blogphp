@@ -1,0 +1,100 @@
+{extend name="public/base" /}
+{block name="main"}
+<!-- Page Body -->
+
+<div class="page-body">
+
+    <div class="row">
+        <div class="col-lg-12 col-sm-12 col-xs-12">
+            <div class="widget">
+                <div class="widget-body">
+                    <div class="col-md-4">
+                        <form autocomplete="off" method="get" action="{:url('operate/index')}">
+                            <input value="{notempty name='keywords'}{$keywords}{/notempty}" type="text" placeholder="请输入关键词" class="form-control" name="keywords" autocomplete="off" style="display: inline-block;
+    width: 85%;">
+                            <input type="submit" value="搜索" class="btn btn-sm btn-primary article_search">
+                        </form>
+                    </div>
+                    <div class="flip-scroll">
+                        <form action="" method="post" id="form">
+                            <?php if(authCheck('log/dels')):?>
+                            <input form="form" formaction="{:url('log/dels')}" onclick="return confirm('确定要删除吗？')" id="deletes" type="submit" class="btn btn-sm btn-danger"value="批量删除">
+                            <a title="清空数据表" class="btn btn-danger btn-xs delete" deleteurl="{:url('log/truncateTable',array('db_name'=>'operate_log'))}"><i class="fa fa-trash-o"></i> 清空数据表</a>
+
+                            <?php endif;?>
+                            <input class="btn btn-sm btn-danger" value="清空" onclick="window.location.href='operate.html'" type="button">
+                            <br><br>
+                            <table class="table table-bordered table-hover">
+                                <thead class="">
+                                <tr id="thead">
+                                    <th class="text-center">
+                                        <label>
+                                            <input type="checkbox" class="inverted" >
+                                            <span class="text" style="cursor: pointer" id="fck"></span>
+                                        </label>
+                                    </th>
+                                    <th class="text-center" width="2%">ID</th>
+                                    <th class="text-center">操作者</th>
+                                    <th class="text-center">操作者IP</th>
+                                    <th class="text-center">操作方法</th>
+                                    <th class="text-center">操作描述</th>
+                                    <th class="text-center">操作时间</th>
+                                    <th class="text-center" width="8%">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {volist name="res" id="vo"}
+                                <tr id="tr_{$vo.log_id}">
+                                    <td class="text-center" >
+                                        <label>
+                                            <input type="checkbox" name="log_id[]" value="{$vo.log_id}" class="inverted sck">
+                                            <span class="text" style="cursor: pointer"></span>
+                                        </label>
+                                    </td>
+                                    <td align="center">{$vo.log_id}</td>
+                                    <td align="center">{$vo.operator}</td>
+                                    <td align="center">{$vo.operator_ip}</td>
+                                    <td align="center">{$vo.operate_method}</td>
+                                    <td class="sub sub_{$vo.log_id}" data-id="{$vo.log_id}" data-title="{$vo.unlimit_operate_desc}">{$vo.operate_desc}</td>
+                                    <td align="center">{$vo.operate_time}</td>
+
+                                    <td align="center">
+                                        <?php if(authCheck('log/delete')):?>
+                                        <a href="javascript:void(0)" title="删除" class="btn btn-danger btn-xs delete" deleteurl="{:url('log/delete',array('id'=>$vo['log_id']))}"><i class="fa fa-trash-o"></i> Delete</a>
+                                        <?php endif;?>
+                                    </td>
+                                </tr>
+                                {/volist}
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                    <div style="padding-top:10px;">
+                        {$res->render()}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- /Page Body -->
+{/block}
+{block name="page_script"}
+<script>
+  let subtips = undefined;
+  $(".sub").hover(function() {
+    let id=$(this).data('id');
+    let title = $(this).data('title');
+    if(title){
+      openMsg(".sub_"+id,title);
+    }
+  }, function() {
+    layer.close(subtips);
+  });
+  function openMsg($e,$title) {
+    subtips = layer.tips($title, $e,{tips:[1,'#000'],time: 30000});
+  }
+</script>
+{/block}

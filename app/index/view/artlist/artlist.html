@@ -1,0 +1,72 @@
+{extend name="public/base"}
+
+{block name="left"}
+<div id="wrapper">
+<div id="xh_content">
+<style>
+div .path{background: none;}
+div .path a{color:#000;}
+</style>
+        {include file="public/xue" /}
+        <div class="clear"></div>
+            <div class="xh_area_h_3" style="margin-top: 40px;">
+                {volist name="artres" id="vo"}
+                {if condition="$vo.pic neq ''"}
+                <div class="xh_post_h_3 ofh  animated fadeInRight">
+                    <div class="xh" style="background-image:-webkit-linear-gradient(top,#fff,#f9f9f9);border:1px solid #ccc">
+                        <a href="/article/{$vo.cid}/{$vo.id}" title="{$vo.title}">
+                            <img src="{$vo.pic}" alt="{$vo.title}" height="240" width="400">
+                        </a>
+                    </div>
+                    <div class="r ofh">
+                            <span class="xh_post_h_3_title ofh" style="height:60px;">
+                                <a href="/article/{$vo.cid}/{$vo.id}" title="{$vo.title}">
+                                    <span style="font-size: 20px;font-weight: bold">{if $vo.rec == "1"}<span style="color: red;" title="推荐文章">*</span>{/if}{$vo.title}</span>
+                                </a>
+                            </span>
+                        <span class="time">{$vo.create_time}</span>
+                        <div class="xh_post_h_3_entry ofh sub_content" style="color:#555;height:80px; overflow:hidden;">
+                            {$vo.content|urldecode}
+                        </div>
+                        <div class="b">
+                            <span title="{$vo.click}人赞" class="xh_love"><span class="textcontainer"><span>🙆{$vo.click}</span></span> </span> <span title="{$vo.look}人浏览" class="xh_views">👀{$vo.look}</span>
+                        </div>
+                    </div>
+                    <span class="cat">
+                            <a href="/artlist/{$vo.cid}" title="查看 {$vo.catename} 中的全部文章" rel="category tag">{$vo.catename}</a>
+                        </span>
+                </div>
+                {else/}
+                <div class="xh_post_h_3 ofh  animated fadeInRight">
+                    <div class="r ofh" style="width:95%;background-image:-webkit-linear-gradient(top,#fff,#f9f9f9);border:1px solid #ccc">
+                        <h2 class="xh_post_h_3_title ofh" style="height:60px;">
+                            <a href="/article/{$vo.cid}/{$vo.id}" title="{$vo.title}">{if $vo.rec == "1"}<span style="color: red;" title="推荐文章">*</span>{/if}{$vo.title}</a>
+                        </h2>
+                        <span class="time">{$vo.create_time}</span>
+                        <div class="xh_post_h_3_entry ofh sub_content" style="color:#555;height:80px; overflow:hidden;">
+                            {$vo.content|urldecode}
+                        </div>
+                        <div class="b" style="width:95%">
+                             <span title="{$vo.click}人赞" class="xh_love"><span class="textcontainer"><span>🙆{$vo.click}</span></span> </span> <span title="{$vo.look}人浏览" class="xh_views">👀{$vo.look}</span>
+                        </div>
+                    </div>
+                    <span class="cat">
+                            <a href="/artlist/{$vo.cid}" title="查看 {$vo.catename} 中的全部文章" rel="category tag">{$vo.catename}</a>
+                        </span>
+                </div>
+                {/if}
+
+                {/volist}
+                <div class="page">{$page}</div>
+            </div>
+        </div>
+</div>
+{/block}
+{block name="right"}
+{include file="public/right"}
+{/block}
+{block name="script"}
+<!--<script type="text/javascript" src="__IN__/style/js/TagCloud.js"></script>-->
+<!--彩带-->
+<!--<script src="__IN__/style/ribbonjs/dist/ribbon.min.js"></script>-->
+{/block}

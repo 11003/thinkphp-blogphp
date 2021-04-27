@@ -1,0 +1,270 @@
+
+<?php
+use think\Request;
+
+?>
+<style>
+    .easyPieChart {
+        width: 47px;
+        height: 47px;
+        line-height: 47px;
+        font-weight: bold;
+    }
+    .databox-number-a:hover{
+        text-decoration: none;
+    }
+    .game {
+        height: 830px;
+    }
+    .tab-content {
+        height: auto;
+        overflow: hidden;
+    }
+</style>
+<div class="page-body">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="row">
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="databox radius-bordered databox-shadowed databox-graded ">
+                        <div class="databox-left bg-themesecondary">
+                            <div class="databox-piechart">
+                                <div class="easyPieChart">
+                                    <span class="white" style="font-size: 25px">
+                                        <i class="stat-icon icon-lg fa fa-list-alt"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="databox-right">
+                            <a class="databox-number-a" href="{:url('article/index')}"><span class="databox-number themesecondary">{$articleCount}篇</span></a>
+                            <div class="databox-text darkgray">文章总数</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="databox radius-bordered databox-shadowed databox-graded">
+                        <div class="databox-left bg-palegreen">
+                            <div class="databox-piechart">
+                                <div class="easyPieChart">
+                                      <span class="white" style="font-size: 25px">
+                                        <i class="stat-icon icon-lg fa fa-align-justify"></i>
+                                      </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="databox-right">
+                            <a class="databox-number-a" href="{:url('cate/index')}"><span class="databox-number green">{$cateCount}个</span></a>
+                            <div class="databox-text darkgray">栏目总数</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="databox radius-bordered databox-shadowed databox-graded">
+                        <div class="databox-left bg-themeprimary">
+                            <div class="databox-piechart">
+                                <div class="easyPieChart">
+                                      <span class="white" style="font-size: 25px">
+                                        <i class="stat-icon icon-lg fa fa-comment"></i>
+                                      </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="databox-right">
+                            <a class="databox-number-a" href="{:url('comment/index')}"><span class="databox-number themeprimary">{$commentCount}条</span></a>
+                            <div class="databox-text darkgray">评论总数</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="databox radius-bordered databox-shadowed databox-graded">
+                        <div class="databox-left no-padding bordered-left-2 bordered-palegreen">
+                            <img src="{$userInfo['pic']}" style="width:65px; height:65px;">
+                        </div>
+                        <div class="databox-right padding-top-10" style="overflow: hidden">
+                            <div class="databox-stat palegreen">
+                                <i class="stat-icon icon-xlg fa fa-user"></i>
+                            </div>
+                            <div class="databox-text darkgray">昵称：{$userInfo['nickName']}</div>
+                            <div class="databox-text darkgray">登入时间：{:date('Y-m-d H:i:s',$userInfo['last_time'])}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+
+        <ul id="myTab" class="nav nav-tabs">
+            <li class="c-presentation active" data-role="game"><a href="#home" data-toggle="tab">信息</a></li>
+            <li class="c-presentation" data-role="fangke"><a href="#ios" data-toggle="tab">访客</a></li>
+            <li class="c-presentation" data-role="xitong"><a href="#jmeter" data-toggle="tab">系统</a></li>
+        </ul>
+        <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade in active" id="home">
+                <p>作者：Sonder</p>
+                <p>博客地址：<a href="http://blog.musclewiki.cn/" target="_blank">http://blog.musclewiki.cn/</a></p>
+            </div>
+            <div class="tab-pane fade" id="ios">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="dashboard-box">
+                            <div class="widget-body">
+                                <div class="alert alert-info fade in alert-radius-bordered alert-shadowed">
+                                    <i class="fa-fw fa fa-github-square"></i>
+                                    <strong>hi，来自<?php echo getAddressByIp(Request::instance()->ip())?>的来访用户 Welcome to :</strong> <a href="https://github.com/Haiwar/thinkphp-BlogPHP"><b>thinkphp-BlogPHP</b></a>
+                                </div>
+                                <div class="flip-scroll">
+                                    <table class="table table-bordered table-striped table-condensed flip-content">
+                                        <thead class="flip-content bordered-palegreen">
+                                        <tr>
+                                            <th>
+                                                Code
+                                            </th>
+                                            <th>
+                                                <i class="fa-fw fa fa-male"></i>
+                                                位置
+                                            </th>
+                                            <th>
+                                                登录时间
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {volist name="test_login_count" id="vo"}
+                                        <tr>
+                                            <td>
+                                                {$vo.id}
+                                            </td>
+                                            <td>
+                                                {$vo.address}
+                                            </td>
+                                            <td>
+                                                {$vo.login_time}
+                                            </td>
+                                        </tr>
+                                        {/volist}
+                                        </tbody>
+                                    </table>
+                                    <div>
+                                        {$count_page}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="jmeter">
+                <div class="orders-container">
+                    <div class="orders-header">
+                        <h6><i class="glyphicon glyphicon-hdd"></i>&nbsp;系统信息</h6>
+                    </div>
+                    <ul class="orders-list">
+                        <li class="order-item">
+                            <div class="row">
+                                <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 item-left">
+                                    <div class="item-booker">服务器IP</div>
+                                    <div class="item-time">
+                                        <span>{:getHostByName(request()->host())}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="order-item">
+                            <div class="row">
+                                <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 item-left">
+                                    <div class="item-booker">操作系统</div>
+                                    <div class="item-time">
+                                        <span>{:PHP_OS}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="order-item">
+                            <div class="row">
+                                <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 item-left">
+                                    <div class="item-booker">运行环境</div>
+                                    <div class="item-time">
+                                        <span>{:$_SERVER["SERVER_SOFTWARE"]}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="order-item">
+                            <div class="row">
+                                <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 item-left">
+                                    <div class="item-booker">PHP版本</div>
+                                    <div class="item-time">
+                                        <span>{:PHP_VERSION}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="order-item">
+                            <div class="row">
+                                <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 item-left">
+                                    <div class="item-booker">PHP运行方式</div>
+                                    <div class="item-time">
+                                        <span>{:php_sapi_name()}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="order-item">
+                            <div class="row">
+                                <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 item-left">
+                                    <div class="item-booker">ThinkPHP</div>
+                                    <div class="item-time">
+                                        <span>{:THINK_VERSION}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="order-item">
+                            <div class="row">
+                                <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 item-left">
+                                    <div class="item-booker">上传附件限制</div>
+                                    <div class="item-time">
+                                        <span>{:ini_get("file_uploads")}M</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="order-item">
+                            <div class="row">
+                                <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 item-left">
+                                    <div class="item-booker">执行时间限制</div>
+                                    <div class="item-time">
+                                        <span>{:ini_get("max_execution_time")}s</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+
+<script>
+  $(function () {
+    $('.c-presentation').click(function(){
+      localStorage.setItem("local_order",$(this).data('role'));
+    })
+    var localValue = localStorage.getItem("local_order");
+    switch (localValue) {
+      case 'game':
+        $('#myTab li:eq(0) a').tab('show');
+        break;
+      case 'fangke':
+        $('#myTab li:eq(1) a').tab('show');
+        break;
+      case 'xitong':
+        $('#myTab li:eq(2) a').tab('show');
+        break;
+    }
+  });
+</script>

@@ -1,0 +1,22 @@
+{include file="public/css"}
+<style>@media(max-width:767px){.layui-layer{width:100% !important;}}</style>
+{block name="page_style"}{/block}
+<!--{include file="public/loading"}-->
+{include file="public/nav"}
+<div class="main-container container-fluid">
+    <div class="page-container">
+        {include file="public/serach"/}
+        <div class="page-content">
+            {include file="public/head"}
+            <div class="animated fadeInDown">
+                {block name="main"}主内容{/block}
+            </div>
+        </div>
+    </div>
+</div>
+{include file="public/foot"}
+{block name="page_script"}{/block}
+</body>
+<!--  /Body -->
+</html>
+

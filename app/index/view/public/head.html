@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$confres.seo_name?$confres.seo_name:'糟糕!系统出错啦！'}</title>
+<meta name="description" content="{$confres.desc?$confres.desc:'糟糕!系统出错啦！'}" />
+<meta name="keywords" content="{$confres.keywords?$confres.keywords:'糟糕!系统出错啦！'}" />
+<link rel="stylesheet" type="text/css" media="all" href="__IN__/style/style.min.css" />
+<!--<link rel="stylesheet" href="__IN__/style/flipcount/jquery.flipcountdown.css" type="text/css" />-->
+<link href="https://cdn.bootcss.com/flipcountdown/3.0.5/jquery.flipcountdown.min.css" rel="stylesheet">
+<link href="__IN__/style/royalslider.css" rel="stylesheet">
+<link href="__IN__/style/common.min.css" rel="stylesheet">
+<link href="__AD__/css/animate.min.css" rel="stylesheet" />
+<!--<link href='https://unpkg.com/nprogress@0.2.0/nprogress.css' rel='stylesheet' />-->
+<link rel="stylesheet" href="__AD__/layui/css/layui.css">
+<link href="https://cdn.bootcss.com/csshake/1.5.3/csshake.min.css" rel="stylesheet">
+<!--<link href="//live2d-cdn.fghrsh.net/assets/1.4.2/waifu.min.css" rel="stylesheet" />-->
+</head>
+
+<body class="xh_body">
+<div id="goToTop"></div>
+<script>
+
+    var _hmt = _hmt || [];
+    (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?eccbb1edaa6db82a984998d125888701";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+function subForm()
+{formsearch.submit();//form1为form的id
+}
+</script>
+<!--<div class="waifu">-->
+<!--    <canvas id="live2d" width="280" height="250" class="live2d"></canvas>-->
+<!--</div>-->
+    <div id="header_wrap" {if !empty($confres.fixed)} style="position: fixed;top:0" {/if} >
+    <div id="header">
+    <nav class="blog-nav">
+      <li class="li"><a class="blog-nav-item {$request == '/' ? 'action' : ''}" href="/">Home</a></li>
+     {present name="cateres"}
+        {volist name="cateres" id="vo"}
+      <li class="li">
+          <a class="blog-nav-item"
+             href="/{if condition="$vo['type'] eq 1"}artlist{elseif condition="$vo['type'] eq 2"}page{elseif condition="$vo['type'] eq 3"}imglist{/if}/{$vo['id']}">{$vo.catename}</a>
+        <div class="clear"></div>
+      </li>
+      {/volist}
+    {/present}
+    </nav>
+<div style="float: right; width: 215px;">
+            <div class="widget" style="padding-top: 3px;">
+                <div style="float: left;">
+                  <form name="formsearch" action="/search" method="post">
+                        <input name="key" class="key" type="text" style="" id="go" placeholder="在这里搜索..." value="{notempty name="data"}{$data|urldecode}{/notempty}">
+                  </form>
+                </div>
+                <div style="float: left;">
+                    <img src="/index/images/search.png" id="imgSearch" onclick="subForm()" title="<(￣︶￣)↗[GO!]"></div>
+                <div style="clear: both;">
+                </div>
+            </div>
+</div>
+<div class="div" style="clear: both;"></div>
+</div>
+</div>
+
+
+

@@ -1,0 +1,103 @@
+{include file="public/css"}
+<div class="main-container container-fluid">
+    <div class="page-container">
+        <div class="page-content"  style="margin-left: 0;">
+            <div class="page-body">
+
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12 col-xs-12">
+                        <div class="widget">
+                            <div class="widget-header bordered-bottom bordered-blue">
+                                <span class="widget-caption">添加节点</span>
+                            </div>
+                            <div class="widget-body">
+                                <div id="horizontal-form">
+                                    <form class="form-horizontal" id="add_form" action-url="{:url('auth_rule/addPost')}">
+                                        <div class="form-group">
+                                            <label for="" class="col-sm-2 control-label no-padding-right">上级节点</label>
+                                            <div class="col-sm-6">
+                                                <select name="pid" id="e1" style="width: 100%">
+                                                    <option value="0">顶级节点</option>
+                                                    {volist name="pid" id="authRule"}
+                                                    <option value="{$authRule.id}"><?php if($authRule['level']!=0){echo '|';} echo str_repeat('—', $authRule['level']*3)?>{$authRule.title}</option>
+                                                    {/volist}
+                                                </select>
+                                            </div>
+                                            <p class="help-block col-sm-4 red">* 必填</p>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="" class="col-sm-2 control-label no-padding-right">节点名称</label>
+                                            <div class="col-sm-6">
+                                                <input class="form-control" value=""  placeholder="" required="" name="title" type="text">
+                                            </div>
+                                            <p class="help-block col-sm-4 red">* 必填</p>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="" class="col-sm-2 control-label no-padding-right">是否菜单项</label>
+                                            <div class="col-sm-6">
+                                                <div class="radio hide_fun" style="float:left; margin-right:10px;">
+                                                    <label>
+                                                        <input id="menu" name="is_menu" class="inverted" value="2" type="radio" checked>
+                                                        <span class="text">是</span>
+                                                    </label>
+                                                </div>
+                                                <div class="radio show_fun" style="float:left; margin-right:10px;">
+                                                    <label>
+                                                        <input id="list" name="is_menu" class="inverted" value="1" type="radio">
+                                                        <span class="text">否</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <p class="help-block col-sm-4 red">* 必填</p>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="" class="col-sm-2 control-label no-padding-right">节点路径</label>
+                                            <div class="col-sm-6">
+                                                <input id="node" class="form-control" value=""  placeholder="全小写例如：auth_rule/index" required="" name="name" type="text">
+                                            </div>
+                                            <p class="help-block col-sm-4 red">* 必填（控制器/方法）</p>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="" class="col-sm-2 control-label no-padding-right">启用状态</label>
+                                            <div class="col-sm-6">
+                                                <select name="status">
+                                                    <option value="1">开启</option>
+                                                    <option value="0">关闭</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="" class="col-sm-2 control-label no-padding-right">图标 Style</label>
+                                            <div class="col-sm-6">
+                                                <input class="form-control" value=""  placeholder="只有是菜单才能使用； 例：fa-coffee" required="" name="style" type="text">
+                                            </div>
+                                            <a  class="help-block col-sm-4" target="_blank" href="{:url('conf/awesome')}">* font-awesome</a>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-offset-2 col-sm-10">
+                                                <button type="button" class="btn btn-default" onclick="SaveInfoAdd()">保存信息</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{include file="public/foot"}
+{block name="page_script"}
+<script>
+    $("#e1").select2();
+</script>
+{/block}
+

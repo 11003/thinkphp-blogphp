@@ -1,0 +1,98 @@
+{extend name="public/base" /}
+{block name="main"}
+<!-- Page Body -->
+<div class="page-body">
+    <div class="row">
+        <div class="col-lg-12 col-sm-12 col-xs-12">
+            <div class="widget">
+                <div class="widget-body">
+                    <div class="col-md-3">
+                        <input type="text" name="key" class="form-control" placeholder="Search">
+                    </div>
+                     <input class="btn btn-sm btn-primary search" value="搜索" type="button">
+                    <?php if(authCheck('cate/add')):?>
+                    <a href="#" id="add" addurl="{:url('cate/add')}" title="添加栏目" class="btn btn-sm btn-azure btn-addon"> <i class="fa fa-plus"></i> Add</a>
+                    <?php endif;?>
+
+                    <?php if(authCheck('cate/edit')):?>
+                    <input class="btn btn-primary btn-sm" url="{:url('cate/index')}" type="button" id="shiny" value="排序" >
+                    <?php endif;?>
+
+                    <input class="btn btn-sm btn-danger" value="清空" onclick="window.location.reload()" type="button">
+
+                    <?php if(authCheck('cate/dels')):?>
+                    <input form="form" formaction="{:url('cate/dels')}" onclick="return confirm('确定要删除吗？')" type="submit" class="btn btn-sm btn-danger" value="批量删除">
+                    <?php endif;?>
+                    <br><br>
+                    <div class="flip-scroll">
+                        <form action="" method="post" id="form">
+                            <table class="table table-bordered table-hover">
+                                <thead class="">
+                                <tr id="thead">
+                                    <th class="text-center">
+                                        <label>
+                                            <input type="checkbox" class="inverted" >
+                                            <span class="text" style="cursor: pointer" id="fck"></span>
+                                        </label>
+                                    </th>
+                                    <th class="text-center" width="10%">ID</th>
+                                    <th class="text-center" width="10%">排序</th>
+                                    <th class="text-center">栏目名称</th>
+                                    <th class="text-center">栏目描述</th>
+                                    <th class="text-center">栏目类型</th>
+                                    <th class="text-center" width="20%">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {volist name="res" id="vo"}
+                                <tr id="tr_{$vo.id}">
+                                    <td class="text-center" >
+                                        <label>
+                                            <input type="checkbox" name="id[]" value="{$vo.id}" class="inverted sck">
+                                            <span class="text" style="cursor: pointer"></span>
+                                        </label>
+                                    </td>
+                                    <td align="center">{$vo.id}</td>
+                                    <td align="center"><input name="{$vo.id}" class="sort" type="text" style="width:50px; text-align:center;" value="{$vo.sort}"></td>
+                                    <td>
+                                        {if condition="$vo.pid neq 0"}|{/if}
+                                        <?php echo str_repeat('-',$vo['level']*4)?>
+                                        {$vo.catename}
+                                    </td>
+                                    <td>{$vo.desc|subtext=50}</td>
+
+                                    <td align="center">
+                                        {if condition="$vo.type eq 1"}文章列表{elseif condition="$vo.type eq 2"}单页{else/}时光轴{/if}
+                                    </td>
+                                    <td align="center">
+                                        <?php if(authCheck('cate/edit')):?>
+                                        <a href="javascript:void(0)" title="修改" class="btn btn-info btn-xs edit update" updateurl="{:url('cate/edit',array('id'=>$vo['id']))}"><i class="fa fa-edit"></i> Edit</a>
+                                        <?php endif;?>
+
+                                        <?php if(authCheck('cate/delete')):?>
+                                        {if condition="$vo.id == 41 || $vo.id == 60 || $vo.id == 62"}
+                                        <a href="javascript:void(0)" title="固定栏目，不允许删除" class="btn btn-danger btn-xs disabled"><i class="fa fa-trash-o"></i> Delete</a>
+                                        {else/}
+                                        <a href="javascript:void(0)" title="删除" class="btn btn-danger btn-xs delete" deleteurl="{:url('cate/delete',array('id'=>$vo['id']))}"><i class="fa fa-trash-o"></i> Delete</a>
+                                        {/if}
+                                        <?php endif;?>
+                                    </td>
+                                </tr>
+                                {/volist}
+                                </tbody>
+                            </table>
+
+                        </form>
+                    </div>
+                    <div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Page Body -->
+{/block}
+
+
+

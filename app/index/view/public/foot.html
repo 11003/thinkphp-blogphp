@@ -1,0 +1,34 @@
+<style>
+    #footer_wrap{
+        background: linear-gradient(45deg, #101010, #000);
+        animation: hueRotate 10s infinite alternate;
+        /*background: linear-gradient(to right bottom , #FFF , #2badce); !* 标准的语法（必须放在最后） *!*/
+    }
+    @keyframes hueRotate {
+        0 {
+            filter: hue-rotate(0);
+        }
+        100% {
+            filter: hue-rotate(360deg);
+        }
+    }
+</style>
+
+<div id="footer_wrap">
+    <div id="footer">
+       
+            {notempty name="confres.copyright"}
+                <span class="legal" style="color:#FFF;float:left">Copyright © {$confres.copyright}<br/><br>版权所有&nbsp;&nbsp;&nbsp;{$confres.banquan}&nbsp;&nbsp;&nbsp;
+                </span>
+                <span class="legals" style="color:#FFF;float: right;"><br/><br>&nbsp;&nbsp;&nbsp;{$confres.qianming}&nbsp;&nbsp;&nbsp;
+                </span>
+            {/notempty}
+        </div>
+    </div>
+<a id="goToTopBtn" href="#goToTop" style="position:fixed;right:50px;bottom:80px;display: none;width: 50px;height: 100px;">
+    <img src="{$confres.top}" style="border:0;width: 100%;height: 100%;">
+</a>
+
+<!--<script type="text/javascript" src="__IN__/style/ribbonjs/dist/ribbon.min.js"></script>-->
+</body>
+</html>

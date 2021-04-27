@@ -1,0 +1,63 @@
+{extend name="public/base" /}
+{block name="main"}
+<div class="page-body">
+    <!--Row-->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="widget">
+                <div class="widget-body">
+                    <div class="buttons-preview">
+                        <?php if(authCheck('conf/add')):?>
+                        <a href="#" id="add" addurl="{:url('conf/add_video')}" title="添加资源" class="btn btn-sm btn-azure btn-addon"> <i class="fa fa-plus"></i> Add</a>
+                        <?php endif;?>
+                    </div>
+
+                    <table class="table table-bordered table-hover">
+                        <thead class="">
+                        <tr id="thead">
+                            <th class="text-center" width="10%">ID</th>
+                            <th class="text-center">视频资源</th>
+                            <th class="text-center">图片资源</th>
+                            <th class="text-center">创建时间</th>
+                            <th class="text-center">状态</th>
+                            <th class="text-center" width="20%">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {volist name="res" id="vo"}
+                        <tr id="tr_{$vo.id}">
+                            <td align="center">{$vo.id}</td>
+                            <td>{$vo.video_data}</td>
+                            <td class="layer_view">{$vo.img_data}</td>
+                            <td>{$vo.create_time}</td>
+                            <td>{$vo.status == 1 ? '显示' : '关闭'}</td>
+
+                            <td align="center">
+
+                                <?php if(authCheck('conf/edit')):?>
+                                <a href="javascript:void(0)" title="修改" class="btn btn-info btn-xs edit update" updateurl="{:url('conf/edit_video',array('id'=>$vo['id']))}"><i class="fa fa-edit"></i> Edit</a>
+                                <?php endif;?>
+
+                                <?php if(authCheck('conf/delete')):?>
+                                <a href="javascript:void(0)" title="删除" class="btn btn-danger btn-xs delete" deleteurl="{:url('conf/delete_video',array('id'=>$vo['id']))}"><i class="fa fa-trash-o"></i> Delete</a>
+                                <?php endif;?>
+
+                                <?php if(authCheck('conf/edit')):?>
+                                {if condition="$vo.status eq 1"}
+                                <a href="javascript:void(0)" title="关闭" class="btn btn-maroon btn-xs fabu comment-post-status" fabuurl="{:url('conf/status',array('id'=>$vo['id'],'status'=>0))}"><i class="fa fa-level-down"></i>关闭</a>
+                                {else/}
+                                <a href="javascript:void(0)" title="显示" class="btn btn-azure btn-xs fabu comment-post-status" fabuurl="{:url('conf/status',array('id'=>$vo['id'],'status'=>1))}"><i class="fa fa-level-up"></i>显示</a>
+                                {/if}
+                                <?php endif;?>
+                            </td>
+                        </tr>
+                        {/volist}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Row Ends-->
+</div>
+{/block}

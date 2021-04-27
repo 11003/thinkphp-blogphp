@@ -1,0 +1,126 @@
+{block name="page_style"}
+<link href="https://cdn.bootcss.com/Dropify/0.2.2/css/dropify.min.css" rel="stylesheet">
+{/block}
+{include file="public/css"}
+<div class="main-container container-fluid">
+    <div class="page-container">
+        <div class="page-content" style="margin-left: 0;">
+            <div class="page-body">
+
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12 col-xs-12">
+                        <div class="widget">
+                            <div class="widget-header bordered-bottom bordered-blue">
+                                <span class="widget-caption">增加管理员</span>
+                            </div>
+                            <div class="widget-body">
+                                <div id="horizontal-form">
+                                    <form class="form-horizontal" id="add_form" action-url="{:url('admin/addPost')}">
+
+                                        <div class="form-group">
+                                            <label for="" class="col-sm-2 control-label no-padding-right">所属权限组</label>
+                                            <div class="col-sm-6">
+                                                <select name="group_id" class="form-control">
+                                                    {volist name="auth_group" id="vo"}
+                                                    <option value="{$vo.id}">{$vo.title}</option>
+                                                    {/volist}
+                                                </select>
+                                            </div>
+                                            <p class="help-block col-sm-4 red">* 必填</p>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="" class="col-sm-2 control-label no-padding-right">登录账号</label>
+                                            <div class="col-sm-6">
+                                                <input class="form-control" required placeholder="名称" name="username" type="text">
+                                            </div>
+                                            <p class="help-block col-sm-4 red">* 必填</p>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="" class="col-sm-2 control-label no-padding-right">昵称</label>
+                                            <div class="col-sm-6">
+                                                <input class="form-control" required placeholder="昵称" name="nickName" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="" class="col-sm-2 control-label no-padding-right">描述</label>
+                                            <div class="col-sm-6">
+                                                <textarea class="form-control" placeholder="描述" name="desc"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="" class="col-sm-2 control-label no-padding-right">首页信息[Json格式]</label>
+                                            <div class="col-sm-6">
+                                                <textarea class="form-control" placeholder='{"desc": "xxx", "icons": {"url": "http://www.qq.com", "icon": "fa-qq", "title": "qq"}}' name="info"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="" class="col-sm-2 control-label no-padding-right">头像</label>
+                                            <div class="col-sm-6">
+                                                <input type="file" id="file"  class="dropify" data-allowed-file-extensions="*" data-height="100"/>
+                                                <input type="text" class="form-control" placeholder="头像地址" name="pic">
+                                                <input type="hidden" name="del_url">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="" class="col-sm-2 control-label no-padding-right">密码</label>
+                                            <div class="col-sm-6">
+                                                <input class="form-control a" required placeholder="密码" name="password" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="" class="col-sm-2 control-label no-padding-right">确认密码</label>
+                                            <div class="col-sm-6">
+                                                <input class="form-control b" required  placeholder="确认密码" name="password_confirm" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-offset-2 col-sm-10">
+                                                <button type="button" class="btn btn-default" onclick="SaveInfoAdd()">保存信息</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{include file="public/foot"}
+{block name="page_script"}
+<script src="https://cdn.bootcss.com/Dropify/0.2.1/js/dropify.min.js"></script>
+<script>
+    var drEvent = $('.dropify').dropify({
+        messages: {
+            'default': '在这里上传图片',
+            'replace': '在这里替换新的图片',
+            'remove': '删除',
+            'error': '哦噢，出错啦',
+        }
+    });
+
+    drEvent.on('dropify.beforeClear', () => {
+        var formData = new FormData();
+        formData.append('file',$('input[name=del_url]').val());
+        $.ajax({
+            url: '/api/deleteImg',
+            type: 'POST',
+            success: function(data){
+                if(data.code) {
+                    layer.msg('删除成功!');
+                }
+            },
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    });
+</script>
+{/block}
+
+
