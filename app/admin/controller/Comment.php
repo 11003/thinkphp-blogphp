@@ -27,6 +27,7 @@ class Comment extends Base
             $res[$k]['user_email'] = strip_tags($v['user_email']);
             $res[$k]['un_user_comment'] = strip_tags($v['user_comment']);
             $res[$k]['user_comment'] = subtext($v['user_comment'],50);
+            $res[$k]['reply_count'] = $this->reply_count($v['id']);
         }
 		$page= $res->render();
 		$this->assign(array(
@@ -36,6 +37,12 @@ class Comment extends Base
 		));
 		return view('',['title'=>'评论管理']);
 	}
+    private function reply_count($id)
+    {
+        $join=[['__REPLY__ r','r.mid=c.id','LEFT']];
+        return DB::name('comment')->alias('c')->join($join)->whereIn('c.id',$id)->count('r.mid');
+    }
+
 	public function edit()
     {
         $model = new CommentModel();

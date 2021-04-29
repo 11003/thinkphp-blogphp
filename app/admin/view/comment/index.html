@@ -43,6 +43,7 @@
                                     <th class="text-center">邮箱</th>
                                     <th class="text-center">评论内容</th>
                                     <th class="text-center">评论时间</th>
+                                    <th class="text-center">回复数</th>
                                     <th class="text-center">状态</th>
                                     <th class="text-center" width="20%">操作</th>
                                 </tr>
@@ -67,6 +68,7 @@
                                     <td>{$vo.user_email}</td>
                                     <td  class="sub sub_{$vo.id} content" data-id="{$vo.id}" data-title="{$vo.un_user_comment}">{$vo.user_comment}</td>
                                     <td>{$vo.create_time}</td>
+                                    <td style="text-align: center;">{$vo.reply_count?$vo.reply_count:''}</td>
                                     <td style="text-align: center;">
                                     {if condition="$vo.status eq 1"}
                                         <span class="label label-success">
