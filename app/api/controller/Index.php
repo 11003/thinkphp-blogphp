@@ -308,10 +308,10 @@ class Index extends CommonApi
             $data['user_email'] = string_remove_xss(trim($get['email']));
             $data['user_avatar'] = letter_avatar(trim($get['name']));
             if(isset($get['aid'])) {
-                $data['aid'] = string_remove_xss($get['aid']);
+                $data['aid'] = $get['aid'];
             }
             if(isset($get['cid'])) {
-                $data['cid'] = string_remove_xss($get['cid']);
+                $data['cid'] = $get['cid'];
             }
             $res = DB::name('comment')->insertGetId($data);
             if ($res) {
@@ -319,15 +319,16 @@ class Index extends CommonApi
                 session('user_email', $get['email']);
                 $reply_name = session('user_name');
                 $reply_email = session('user_email');
-                if(isset($get['aid'])) {
+
+                if(isset($data['aid'])&&isset($data['cid'])) {
                     //文章
-                    $title = "<a href='". config('my_web.blog_address') ."/post/{$data['aid']}?cid${$data['cid']}&index=true'>"."【".getAddressByIp($data['ip'])."】".$data['user_name']."</a>";
+                    $title = "<a href='". config('my_web.blog_address') ."/post/{$data['aid']}?cid=${$data['cid']}&index=true'>"."【".getAddressByIp($data['ip'])."】".$data['user_name']."</a>";
                 } else {
                     //关于我
                     $title = "<a href='".config('my_web.blog_address')."/page/关于我?cid=41'>"."【".getAddressByIp($data['ip'])."】".$data['user_name']."</a>";
                 }
                 // 发送Server酱
-//                sc_send($title,$data['user_comment']);
+                sc_send($title,$data['user_comment']);
                 return json(['msg' => '评论成功！', 'status' => 200, 'comment_id' => $res, 'reply_data' => ['reply_name_by_session' => $reply_name,'reply_email_by_session' => $reply_email]]);
             } else {
                 return json(['msg' => '评论失败！', 'status' => 0]);

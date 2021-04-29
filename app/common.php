@@ -1,5 +1,5 @@
 <?php
-
+error_reporting(E_ERROR | E_PARSE );
 use app\admin\controller\Auth;
 
 /**
@@ -405,18 +405,13 @@ function LookNumbers($num) {
         return $num;
     }
 }
-function sc_send(  $title , $desc = '' , $key = ''  ) {
+function sc_send(  $title , $desc = '' , $key = 'SCU75298T984eb6895f3fb86b0b2e766fc335ddc35e0db8542681c'  ) {
     $postdata = http_build_query(
         array(
             'text' => $title,
             'desp' => $desc
         )
     );
-
-    if(!$key) {
-        echo '请申请自己的key';
-        die;
-    }
 
     $opts = array('http' =>
         array(
