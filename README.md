@@ -28,6 +28,10 @@ composer update
 
 账号 / 密码：**test**
 
+# 登录账号
+
+admin / 123456
+
 # 数据库
 
 * 文件路径: blogphp.sql
