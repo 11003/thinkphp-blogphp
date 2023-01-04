@@ -1,6 +1,6 @@
 <p align="center">
 <a href="http://blog.musclewiki.cn/" target="_blank" rel="noopener noreferrer">
-<img width="100%" src="https://gitee.com/liuhaier/images/raw/master/img/adminNavLogo.png" alt="thinkphp-BlogPHP">
+<img width="100%" src="https://s2.loli.net/2022/04/21/3nlApN2eLkESGVF.png" alt="thinkphp-BlogPHP">
 </a>
 </p>
 
